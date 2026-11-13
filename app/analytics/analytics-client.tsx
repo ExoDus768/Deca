@@ -7,7 +7,7 @@ type Row={date:string;volume:number;transactions:number;records:number;successRa
 const money=(n:number)=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n);
 const compact=(n:number)=>new Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:2}).format(n);
 const dateLabel=(s:string)=>new Date(s+"T00:00:00Z").toLocaleDateString("en",{month:"short",day:"numeric",timeZone:"UTC"});
-function csv(rows:Row[],metric:string){const header="date,volume_usd,successful_transactions,average_swap_usd";const body=rows.map(r=>[r.date,r.volume,r.transactions,r.transactions?r.volume/r.transactions:0].join(","));return [header,...body].join("\n");}
+function csv(rows:Row[]){const header="date,volume_usd,successful_transactions,unique_records,success_rate_pct,average_swap_usd";const body=rows.map(r=>[r.date,r.volume,r.transactions,r.records,r.successRate??"",r.transactions?r.volume/r.transactions:0].join(","));return [header,...body].join("\n");}
 export default function AnalyticsClient({rows,metadata}:{rows:Row[];metadata:Record<string,any>}){
  const [preset,setPreset]=useState("30");
  const [start,setStart]=useState(rows[0]?.date??"");
