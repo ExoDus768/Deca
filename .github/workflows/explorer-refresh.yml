@@ -20,7 +20,7 @@ on:
 
 concurrency:
   group: deca-explorer-refresh
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -28,6 +28,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-24.04
+    timeout-minutes: 45
     env:
       DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '200') || '100' }}
     steps:
