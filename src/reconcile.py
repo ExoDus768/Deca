@@ -74,6 +74,25 @@ def run() -> dict:
             "metadata": document.get("metadata", {}),
             "comparisons": comparisons,
         }
+    # Provider context is surfaced separately when its scope is not like-for-like.
+    context_path = METRICS / "defillama_daily_volume_usd.json"
+    if context_path.exists():
+        context_doc = json.loads(context_path.read_text(encoding="utf-8"))
+        context_meta = context_doc.get("metadata", {})
+        context_series = context_doc.get("series", {}).get("defillama_intents", {})
+        explorer_path = METRICS / "intents_daily_volume_usd.json"
+        explorer_doc = json.loads(explorer_path.read_text(encoding="utf-8")) if explorer_path.exists() else {}
+        explorer_series = explorer_doc.get("series", {}).get("intents_explorer", {})
+        output["provider_context"] = {
+            "defillama_intents": {
+                "status": context_meta.get("status", "unknown"),
+                "source_scope": context_meta.get("source_scope"),
+                "comparison_eligible": False,
+                "overlap_days": len(set(context_series) & set(explorer_series)),
+                "note": context_meta.get("comparison_note", "Provider context only; no like-for-like comparison performed."),
+                "latest_day": max(context_series) if context_series else None,
+            }
+        }
     return output
 
 
