@@ -18,7 +18,8 @@ make verify
 
 - `make refresh` fetches configured HTTP JSON sources and records SHA-256 hashes.
 - `python src/normalize_explorer.py` builds daily UTC volume, successful-transaction, success-rate, integrity and asset-pair metrics from Explorer snapshots.
-- `python src/normalize_defillama.py` normalizes DefiLlama daily DEX volume as separate, non-comparable provider context.
+- `python src/normalize_defillama.py` normalizes DefiLlama daily Intents DEX volume as separate, non-comparable provider context.
+- `python src/normalize_defillama_fees.py` normalizes DefiLlama parent-protocol daily fees and revenue; these are broader than Intents and do not prove NEAR token-holder value capture.
 - `make publish` recomputes pairwise metric comparisons and the clearly labeled DefiLlama scope-mismatch diagnostic into `published/reconciliation.json`.
 - `make verify` runs offline: checks snapshot hashes and confirms published output matches a fresh computation.
 
@@ -79,3 +80,25 @@ The production dashboard is configured as a Next.js project on Vercel and is con
 ### Data interpretation
 
 The dashboard deliberately shows an empty state until metric files are published. It must not turn an unavailable metric into zero, and it labels the Explorer series as public 1Click coverage rather than total NEAR Intents activity. The 100-page fetch cap is a collection limit, not proof of complete history.
+
+
+## Re-run the evidence pipeline
+
+The Explorer JWT is required for the authenticated Explorer fetch. Set it locally as an environment variable; never commit it, paste it into source files, or add it to Vercel.
+
+```bash
+git clone https://github.com/ExoDus768/Deca.git
+cd Deca
+python -m pip install -r requirements.txt
+export NEAR_INTENTS_EXPLORER_TOKEN="YOUR_JWT"
+DECA_EXPLORER_MAX_PAGES=200 python src/snapshot.py
+python src/normalize_explorer.py
+python src/normalize_defillama.py
+python src/normalize_defillama_fees.py
+make publish
+make verify
+```
+
+DefiLlama endpoints are public and are fetched by the same snapshot command. To run the scheduled/hosted workflow, open [GitHub Actions](https://github.com/ExoDus768/Deca/actions), select **Explorer API refresh**, and dispatch it with a page limit. The workflow stores the JWT in GitHub Actions Secrets and publishes only normalized public metrics.
+
+The investment page displays a falsifiable thesis, the currently measurable pillars, a diagnostic cross-provider gap when overlapping data exists, and explicit conditions that would strengthen or weaken the thesis. DefiLlama NEAR protocol fees/revenue are ecosystem-level context, not Intents-only economics or token-holder yield.
