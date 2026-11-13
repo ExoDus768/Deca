@@ -26,7 +26,7 @@ def main() -> int:
             ok = False
 
     # Validate normalized daily metric invariants and explicit coverage metadata.
-    for metric_name in ("intents_daily_volume_usd.json", "daily_transactions.json"):
+    for metric_name in ("intents_daily_volume_usd.json", "daily_transactions.json", "daily_quality.json"):
         metric_path = ROOT / "data" / "metrics" / metric_name
         if not metric_path.exists():
             print(f"MISSING: data/metrics/{metric_name}")
@@ -48,8 +48,45 @@ def main() -> int:
             if any(float(value) < 0 for value in series.values()):
                 print(f"NEGATIVE METRIC VALUE: data/metrics/{metric_name}")
                 ok = False
+            if metric_name == "intents_daily_volume_usd.json":
+                for field in ("raw_rows", "unique_rows", "duplicates_removed", "successful_rows",
+                              "success_rate_pct", "latest_snapshot_pages", "generated_at_utc"):
+                    if metadata.get(field) is None:
+                        print(f"MISSING INTEGRITY FIELD: {field}")
+                        ok = False
+                if metadata.get("raw_rows", 0) - metadata.get("unique_rows", 0) != metadata.get("duplicates_removed", 0):
+                    print("INVALID DEDUPLICATION RECONCILIATION")
+                    ok = False
+            if metric_name == "daily_quality.json":
+                for day, item in series.items():
+                    rate = item.get("success_rate_pct")
+                    if rate is not None and not 0 <= float(rate) <= 100:
+                        print(f"INVALID DAILY SUCCESS RATE: {day}")
+                        ok = False
+                    if item.get("successful_transactions", 0) > item.get("unique_records", 0):
+                        print(f"INVALID DAILY QUALITY COUNTS: {day}")
+                        ok = False
         except (ValueError, TypeError, json.JSONDecodeError) as exc:
             print(f"INVALID METRIC: data/metrics/{metric_name}: {exc}")
+            ok = False
+
+    pair_path = ROOT / "data" / "metrics" / "asset_pair_breakdown.json"
+    volume_path = ROOT / "data" / "metrics" / "intents_daily_volume_usd.json"
+    if not pair_path.exists():
+        print("MISSING: data/metrics/asset_pair_breakdown.json")
+        ok = False
+    else:
+        try:
+            pair_doc = json.loads(pair_path.read_text(encoding="utf-8"))
+            pairs = pair_doc.get("pairs", [])
+            if not isinstance(pairs, list):
+                print("INVALID ASSET-PAIR BREAKDOWN")
+                ok = False
+            elif pairs and any(float(item.get("volume_usd", 0)) < 0 for item in pairs):
+                print("NEGATIVE ASSET-PAIR VOLUME")
+                ok = False
+        except (ValueError, TypeError, json.JSONDecodeError) as exc:
+            print(f"INVALID ASSET-PAIR JSON: {exc}")
             ok = False
 
     published_path = ROOT / "published" / "reconciliation.json"
