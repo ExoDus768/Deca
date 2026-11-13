@@ -93,6 +93,30 @@ def main() -> None:
             raise ValueError(f"Negative amountInUsd value: {raw_usd!r}")
         volume[day] += value
 
+    # Preserve deeper historical days across daily runs. For overlapping dates,
+    # keep the highest observed daily total; successful settlements are immutable,
+    # and a shallower scheduled fetch must not erase a prior deeper backfill.
+    volume_path = METRICS / "intents_daily_volume_usd.json"
+    count_path = METRICS / "daily_transactions.json"
+    try:
+        previous_volume = json.loads(volume_path.read_text(encoding="utf-8")).get("series", {}).get("intents_explorer", {})
+    except (FileNotFoundError, json.JSONDecodeError):
+        previous_volume = {}
+    try:
+        previous_counts = json.loads(count_path.read_text(encoding="utf-8")).get("series", {}).get("intents_explorer", {})
+    except (FileNotFoundError, json.JSONDecodeError):
+        previous_counts = {}
+    current_volume = {day: float(value) for day, value in volume.items()}
+    current_counts = dict(counts)
+    merged_volume = {
+        day: max(float(previous_volume.get(day, 0)), float(current_volume.get(day, 0)))
+        for day in set(previous_volume) | set(current_volume)
+    }
+    merged_counts = {
+        day: max(int(previous_counts.get(day, 0)), int(current_counts.get(day, 0)))
+        for day in set(previous_counts) | set(current_counts)
+    }
+
     METRICS.mkdir(parents=True, exist_ok=True)
     latest_stamp = files[0].name.partition("-page-")[0]
     latest_batch = [p for p in files if p.name.startswith(latest_stamp + "-page-")]
@@ -112,6 +136,8 @@ def main() -> None:
         "raw_rows": raw_rows,
         "unique_rows": len(rows),
         "duplicates_removed": raw_rows - len(rows),
+        "series_merge_policy": "per-UTC-day maximum observed across committed snapshots; prevents a shallower refresh from erasing a deeper backfill",
+        "series_days_retained": len(set(merged_volume) | set(merged_counts)),
         "successful_rows": success_rows,
         "excluded_non_success_rows": len(rows) - success_rows,
         "success_rate_pct": round(success_rows / len(rows) * 100, 4) if rows else None,
@@ -131,19 +157,19 @@ def main() -> None:
     volume_doc = {
         "metadata": {**common, "unit": "USD",
             "definition": "Sum of Explorer amountInUsd for unique SUCCESS transactions, grouped by createdAtTimestamp UTC date."},
-        "series": {"intents_explorer": {day: float(value) for day, value in sorted(volume.items())}},
+        "series": {"intents_explorer": dict(sorted(merged_volume.items()))},
     }
     count_doc = {
         "metadata": {**common, "unit": "transactions",
             "definition": "Count of unique Explorer SUCCESS transactions, grouped by createdAtTimestamp UTC date."},
-        "series": {"intents_explorer": dict(sorted(counts.items()))},
+        "series": {"intents_explorer": dict(sorted(merged_counts.items()))},
     }
     (METRICS / "intents_daily_volume_usd.json").write_text(
         json.dumps(volume_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (METRICS / "daily_transactions.json").write_text(
         json.dumps(count_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Read {raw_rows} raw rows; retained {len(rows)} unique records; removed {raw_rows-len(rows)} duplicates.")
-    print(f"Normalized {success_rows} unique successful settlements across {len(volume_doc['series']['intents_explorer'])} UTC days.")
+    print(f"Normalized {success_rows} unique successful settlements; retained {len(merged_volume)} UTC volume days across refreshes.")
     print(f"Latest fetch: {len(latest_batch)} pages; configured cap {page_cap}; cap reached={page_cap_reached}.")
 
 
