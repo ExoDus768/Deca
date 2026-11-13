@@ -25,6 +25,33 @@ def main() -> int:
             print(f"HASH MISMATCH: {rel}")
             ok = False
 
+    # Validate normalized daily metric invariants and explicit coverage metadata.
+    for metric_name in ("intents_daily_volume_usd.json", "daily_transactions.json"):
+        metric_path = ROOT / "data" / "metrics" / metric_name
+        if not metric_path.exists():
+            print(f"MISSING: data/metrics/{metric_name}")
+            ok = False
+            continue
+        try:
+            document = json.loads(metric_path.read_text(encoding="utf-8"))
+            metadata = document.get("metadata", {})
+            series = document.get("series", {}).get("intents_explorer", {})
+            if not series:
+                print(f"EMPTY: data/metrics/{metric_name}")
+                ok = False
+            if metadata.get("unique_rows", 0) < metadata.get("successful_rows", 0):
+                print(f"INVALID COUNTS: data/metrics/{metric_name} unique_rows < successful_rows")
+                ok = False
+            if metadata.get("duplicates_removed", 0) < 0:
+                print(f"INVALID DEDUPLICATION COUNT: data/metrics/{metric_name}")
+                ok = False
+            if any(float(value) < 0 for value in series.values()):
+                print(f"NEGATIVE METRIC VALUE: data/metrics/{metric_name}")
+                ok = False
+        except (ValueError, TypeError, json.JSONDecodeError) as exc:
+            print(f"INVALID METRIC: data/metrics/{metric_name}: {exc}")
+            ok = False
+
     published_path = ROOT / "published" / "reconciliation.json"
     expected = reconcile.run()
     if not published_path.exists():
