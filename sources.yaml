@@ -1,4 +1,4 @@
-# Candidate sources are disabled until their API schema and metric scope are verified.
+# Explorer is enabled after a successful authenticated fetch. Other candidates remain disabled until their schemas and metric scopes are verified.
 # Never treat two dashboards as independent merely because they publish different URLs.
 sources:
   intents_explorer:
