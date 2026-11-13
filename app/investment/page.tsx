@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import SiteNav from "../components/site-nav";
-import { Activity, ArrowUpRight, BarChart3, CheckCircle2, CircleAlert, Coins, GitCompareArrows, ShieldAlert, Terminal } from "lucide-react";
+import { Activity, ArrowUpRight, CircleAlert, Coins, GitCompareArrows, Terminal } from "lucide-react";
 
 function read(file:string):any {
   try { return JSON.parse(fs.readFileSync(path.join(process.cwd(),file),"utf8")); }
@@ -34,7 +34,6 @@ const revenue=feesDoc?.series?.defillama_near_revenue??{};
 const fees30=recentTotal(fees);
 const revenue30=recentTotal(revenue);
 const monetization=fees30&&revenue30!=null?revenue30/fees30*100:null;
-const feeDays=Object.keys(fees).length;
 const provider=reconciliation?.provider_context?.defillama_intents??{};
 const diagnostic=provider.diagnostic_comparison??{};
 const thesisTriggers=[
