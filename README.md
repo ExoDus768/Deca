@@ -17,9 +17,9 @@ make verify
 ```
 
 - `make refresh` fetches configured HTTP JSON sources and records SHA-256 hashes.
-- `python src/normalize_explorer.py` builds daily UTC volume and successful-transaction metrics from Explorer snapshots.
+- `python src/normalize_explorer.py` builds daily UTC volume, successful-transaction, success-rate, integrity and asset-pair metrics from Explorer snapshots.
 - `python src/normalize_defillama.py` normalizes DefiLlama daily DEX volume as separate, non-comparable provider context.
-- `make publish` recomputes pairwise metric comparisons into `published/reconciliation.json` and reports provider-context availability without conflating scopes.
+- `make publish` recomputes pairwise metric comparisons and the clearly labeled DefiLlama scope-mismatch diagnostic into `published/reconciliation.json`.
 - `make verify` runs offline: checks snapshot hashes and confirms published output matches a fresh computation.
 
 ## Project layout
@@ -52,7 +52,7 @@ The SQL is a starting query, not yet a verified source of the same transaction d
 
 ## Investment thesis
 
-The thesis must be generated from evidence, not from a preferred dashboard number. Deca reports observed daily volume, transaction activity, average ticket size, activity concentration, coverage quality and source limitations. It explicitly separates provider-context metrics when definitions differ. A short or page-capped sample is not sufficient to claim sustained adoption, retention, profitability or token value.
+The thesis must be generated from evidence, not from a preferred dashboard number. Deca reports observed daily volume, transaction activity, average ticket size, daily settlement success rates, asset-pair concentration, cross-provider diagnostic gaps, coverage quality and source limitations. It explicitly separates provider-context metrics when definitions differ. A short or page-capped sample is not sufficient to claim sustained adoption, retention, profitability or token value.
 
 ## License
 
@@ -61,7 +61,7 @@ MIT — see `LICENSE`.
 
 ## Dashboard and deployment
 
-Deca includes a Next.js dashboard in `app/`. It is designed to read the normalized public metric files from `data/metrics/` and the reconciliation report from `published/`. The Explorer refresh workflow now normalizes the latest collected snapshot, runs `make publish`, commits the public metric JSON files, and uploads the raw evidence as a short-lived GitHub Actions artifact. Raw transaction snapshots and the Explorer JWT are not exposed to the browser.
+Deca includes a Next.js multi-page research workspace in `app/`: Overview, Analytics, Investment Signals, Methodology and Documentation. A top-left menu navigates between them. Analytics supports custom date windows, 7/30/90-day presets, daily/weekly/monthly aggregation, volume, transaction, average-ticket and success-rate indicators, previous-period comparisons, filters, tables and CSV export. It reads normalized public metric files from `data/metrics/` and the reconciliation report from `published/`. The Explorer refresh workflow now normalizes the latest collected snapshot, runs `make publish`, commits the public metric JSON files, and uploads the raw evidence as a short-lived GitHub Actions artifact. Raw transaction snapshots and the Explorer JWT are not exposed to the browser.
 
 ### Run locally
 
