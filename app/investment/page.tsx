@@ -62,7 +62,7 @@ const latestPair=provider.latest_overlap_day&&provider.latest_explorer_usd!=null
  ? `Latest shared day ${provider.latest_overlap_day}: Explorer ${money(Number(provider.latest_explorer_usd))} vs DefiLlama ${money(Number(provider.latest_defillama_usd))}.`
  : "Latest paired daily values will appear after the provider refresh.";
 const thesisTriggers=[
- ["Adoption persists","90-day Intents volume and successful swaps trend higher for at least two consecutive quarters.","Upgrade the thesis only after a longer, non-page-capped series confirms this."],
+ ["Adoption persists","DefiLlama NEAR Intents DEX volume rises across successive 90-day windows for two consecutive quarters, with public Explorer swap counts confirming direction where overlap exists.","Use the longer provider history for the trend; keep the public 1Click count as a narrower cross-check, not a substitute for all-Intents activity."],
  ["Usage converts to economics","NEAR Intents captured revenue remains at least 25% of gross fees over two consecutive quarters, with solver/distribution shares disclosed.","This is a proposed Deca test. Captured revenue is not identical to token-holder revenue."],
  ["The evidence survives cross-checks","Explorer and DefiLlama NEAR Intents daily volume show a stable, explainable gap over 30+ overlapping days.","Explorer is public 1Click only; DefiLlama DEX volume may include a broader integrator set. The volume gap remains diagnostic until scope is aligned."]
 ];
