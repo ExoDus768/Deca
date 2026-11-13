@@ -1,0 +1,43 @@
+# Provider endpoints must be checked against current provider docs before enabling.
+# Replace TODO values only after confirming metric definition, units, coverage and schema.
+sources:
+  intents_explorer:
+    enabled: false
+    url: "TODO_VERIFY_INTENTS_EXPLORER_ENDPOINT"
+    format: json
+    notes: "Candidate source; endpoint and volume definition not yet verified."
+  defillama_intents:
+    enabled: false
+    url: "TODO_VERIFY_DEFILLAMA_NEAR_INTENTS_ENDPOINT"
+    format: json
+    notes: "Candidate source; confirm NEAR Intents coverage and methodology."
+  nearblocks_stats:
+    enabled: false
+    url: "https://api.nearblocks.io/v1/stats"
+    format: json
+    notes: "General NEAR chain stats; not assumed to be NEAR Intents volume."
+  near_rpc_status:
+    enabled: false
+    url: "https://rpc.mainnet.near.org"
+    method: POST
+    body:
+      jsonrpc: "2.0"
+      id: "deca"
+      method: status
+      params: []
+    format: json
+    notes: "Network health/context only; not an Intents volume source."
+
+# A metric is comparable only when each source adapter produces the same
+# definition, unit, chain scope and UTC day boundary.
+metrics:
+  intents_daily_volume_usd:
+    sources: [intents_explorer, defillama_intents]
+    unit: USD
+    tolerance_pct: 10
+    definition: "Daily USD notional volume attributed specifically to NEAR Intents."
+  daily_transactions:
+    sources: [bigquery, nearblocks]
+    unit: transactions
+    tolerance_pct: 5
+    definition: "Daily transaction count; source inclusion rules must be aligned."

@@ -1,0 +1,18 @@
+{
+  "generated_from": "normalized metric files; deterministic offline computation",
+  "metrics": {
+    "daily_transactions": {
+      "comparisons": {},
+      "definition": "Daily transaction count; source inclusion rules must be aligned.",
+      "status": "awaiting_normalized_data",
+      "unit": "transactions"
+    },
+    "intents_daily_volume_usd": {
+      "comparisons": {},
+      "definition": "Daily USD notional volume attributed specifically to NEAR Intents.",
+      "status": "awaiting_normalized_data",
+      "unit": "USD"
+    }
+  },
+  "project": "deca"
+}
