@@ -56,3 +56,25 @@ The thesis must be generated from reconciled evidence, not from a preferred dash
 ## License
 
 MIT — see `LICENSE`.
+
+
+## Dashboard and deployment
+
+Deca includes a Next.js dashboard in `app/`. It is designed to read the normalized public metric files from `data/metrics/` and the reconciliation report from `published/`. The Explorer refresh workflow now normalizes the latest collected snapshot, runs `make publish`, commits the public metric JSON files, and uploads the raw evidence as a short-lived GitHub Actions artifact. Raw transaction snapshots and the Explorer JWT are not exposed to the browser.
+
+### Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+The dashboard is available at `http://localhost:3000`. To build for production, run `npm run build`.
+
+### Vercel
+
+The production dashboard is configured as a Next.js project on Vercel and is connected to this GitHub repository. Pushes to `main` can trigger a deployment. No Explorer API token is required in Vercel: the token remains a GitHub Actions secret and only normalized public metric files are committed for dashboard display.
+
+### Data interpretation
+
+The dashboard deliberately shows an empty state until metric files are published. It must not turn an unavailable metric into zero, and it labels the Explorer series as public 1Click coverage rather than total NEAR Intents activity. The 100-page fetch cap is a collection limit, not proof of complete history.
