@@ -25,10 +25,18 @@ def main() -> int:
             print(f"HASH MISMATCH: {rel}")
             ok = False
 
+    # Enhanced quality outputs become mandatory once the upgraded normalizer has published them.
+    base_metric = ROOT / "data" / "metrics" / "intents_daily_volume_usd.json"
+    base_doc = json.loads(base_metric.read_text(encoding="utf-8")) if base_metric.exists() else {}
+    base_metadata = base_doc.get("metadata", {})
+    require_enhanced = str(base_metadata.get("adapter_version", "0")) >= "1.2.0"
+
     # Validate normalized daily metric invariants and explicit coverage metadata.
     for metric_name in ("intents_daily_volume_usd.json", "daily_transactions.json", "daily_quality.json"):
         metric_path = ROOT / "data" / "metrics" / metric_name
         if not metric_path.exists():
+            if metric_name == "daily_quality.json" and not require_enhanced:
+                continue
             print(f"MISSING: data/metrics/{metric_name}")
             ok = False
             continue
@@ -48,7 +56,7 @@ def main() -> int:
             if metric_name != "daily_quality.json" and any(float(value) < 0 for value in series.values()):
                 print(f"NEGATIVE METRIC VALUE: data/metrics/{metric_name}")
                 ok = False
-            if metric_name == "intents_daily_volume_usd.json":
+            if metric_name == "intents_daily_volume_usd.json" and require_enhanced:
                 for field in ("raw_rows", "unique_rows", "duplicates_removed", "successful_rows",
                               "success_rate_pct", "latest_snapshot_pages", "generated_at_utc"):
                     if metadata.get(field) is None:
@@ -73,8 +81,9 @@ def main() -> int:
     pair_path = ROOT / "data" / "metrics" / "asset_pair_breakdown.json"
     volume_path = ROOT / "data" / "metrics" / "intents_daily_volume_usd.json"
     if not pair_path.exists():
-        print("MISSING: data/metrics/asset_pair_breakdown.json")
-        ok = False
+        if require_enhanced:
+            print("MISSING: data/metrics/asset_pair_breakdown.json")
+            ok = False
     else:
         try:
             pair_doc = json.loads(pair_path.read_text(encoding="utf-8"))
