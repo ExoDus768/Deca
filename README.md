@@ -6,7 +6,7 @@
 
 ## Current status
 
-This repository is the reproducible project scaffold. The first source audit has identified a documented NEAR Intents Explorer API, a public DefiLlama protocol endpoint, a NearBlocks Intents dashboard, and a NearStats JSON endpoint. They are not interchangeable: source lineage and metric scope must be aligned before a pair is called independent. All live fetches remain disabled until response schemas and access requirements are implemented.
+The authenticated NEAR Intents Explorer connection is live. The manual refresh workflow fetches up to 1,000 latest Explorer records per run and stores the raw snapshot as a workflow artifact. It then normalizes successful settlements into UTC daily USD-volume and transaction-count series. This is a rolling snapshot, not a full historical backfill; metric metadata records that coverage limitation. DefiLlama, NearBlocks, and NearStats remain disabled pending adapter and lineage validation.
 
 ## Workflow
 
