@@ -83,13 +83,21 @@ def run() -> dict:
         explorer_path = METRICS / "intents_daily_volume_usd.json"
         explorer_doc = json.loads(explorer_path.read_text(encoding="utf-8")) if explorer_path.exists() else {}
         explorer_series = explorer_doc.get("series", {}).get("intents_explorer", {})
+        overlap = sorted(set(context_series) & set(explorer_series))
+        diagnostic = compare(explorer_series, context_series) if overlap else {"status": "no_overlap", "overlap_days": 0}
+        latest_overlap_day = overlap[-1] if overlap else None
         output["provider_context"] = {
             "defillama_intents": {
                 "status": context_meta.get("status", "unknown"),
                 "source_scope": context_meta.get("source_scope"),
                 "comparison_eligible": False,
-                "overlap_days": len(set(context_series) & set(explorer_series)),
-                "note": context_meta.get("comparison_note", "Provider context only; no like-for-like comparison performed."),
+                "comparison_type": "scope_mismatch_diagnostic_only",
+                "overlap_days": len(overlap),
+                "diagnostic_comparison": diagnostic,
+                "latest_overlap_day": latest_overlap_day,
+                "latest_explorer_usd": float(explorer_series[latest_overlap_day]) if latest_overlap_day else None,
+                "latest_defillama_usd": float(context_series[latest_overlap_day]) if latest_overlap_day else None,
+                "note": "Side-by-side daily USD volume diagnostic only. Explorer public 1Click swaps and DefiLlama protocol DEX volume may have different coverage and inclusion rules. Gap statistics are not a formal reconciliation and must not be described as one.",
                 "latest_day": max(context_series) if context_series else None,
             }
         }
