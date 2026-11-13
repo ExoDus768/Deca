@@ -11,10 +11,13 @@ function read(file:string):any {
 const volumeDoc=read("data/metrics/intents_daily_volume_usd.json");
 const txDoc=read("data/metrics/daily_transactions.json");
 const feesDoc=read("data/metrics/defillama_fees_revenue.json");
+const defiVolumeDoc=read("data/metrics/defillama_daily_volume_usd.json");
 const reconciliation=read("published/reconciliation.json");
 const volume=volumeDoc?.series?.intents_explorer??{};
 const tx=txDoc?.series?.intents_explorer??{};
+const defiVolume=defiVolumeDoc?.series?.defillama_intents??{};
 const dates=Object.keys(volume).sort();
+const defiVolumeDates=Object.keys(defiVolume).sort();
 const totalVolume=Object.values(volume).reduce((a:number,b:any)=>a+Number(b||0),0);
 const totalTx=Object.values(tx).reduce((a:number,b:any)=>a+Number(b||0),0);
 const meta=volumeDoc?.metadata??{};
@@ -29,11 +32,21 @@ function recentTotal(series:Record<string,number>){
  const start=new Date(end);start.setUTCDate(start.getUTCDate()-29);
  return Object.entries(series).filter(([d])=>d>=start.toISOString().slice(0,10)&&d<=days[days.length-1]).reduce((s,[,v])=>s+Number(v||0),0);
 }
+function windowTotal(series:Record<string,number>,windowDays:number){
+ const days=Object.keys(series??{}).sort();
+ if(!days.length)return null;
+ const end=new Date(days[days.length-1]+"T00:00:00Z");
+ const start=new Date(end);start.setUTCDate(start.getUTCDate()-(windowDays-1));
+ return Object.entries(series).filter(([d])=>d>=start.toISOString().slice(0,10)&&d<=days[days.length-1]).reduce((s,[,v])=>s+Number(v||0),0);
+}
 const fees=feesDoc?.series?.defillama_intents_fees??{};
 const revenue=feesDoc?.series?.defillama_intents_revenue??{};
 const protocolRevenue=feesDoc?.series?.defillama_intents_protocol_revenue??{};
 const holderRevenue=feesDoc?.series?.defillama_intents_holders_revenue??{};
 const supplySideRevenue=feesDoc?.series?.defillama_intents_supply_side_revenue??{};
+const defiVolume90=windowTotal(defiVolume,90);
+const defiVolume365=windowTotal(defiVolume,365);
+const defiVolumeCoverage=defiVolumeDates.length ? `${defiVolumeDates.length} daily observations · ${defiVolumeDates[0]} to ${defiVolumeDates[defiVolumeDates.length-1]}` : "DefiLlama DEX volume history pending";
 const fees30=recentTotal(fees);
 const revenue30=recentTotal(revenue);
 const protocolRevenue30=recentTotal(protocolRevenue);
@@ -64,10 +77,10 @@ export default function Investment(){
    <p>The opportunity is that users can move value across chains through a unified intent-based experience, while NEAR's ecosystem captures economic value from the activity. The evidence today supports investigating that model; it does not yet prove durable adoption, competitive advantage, or value accruing to the NEAR token.</p>
    <div className="thesis-verdict"><strong>What would change our mind?</strong><span>Persistent activity growth and sustained fee-to-revenue conversion strengthen the case. Falling Intents usage, weakening monetization, or no credible token value capture weaken it.</span></div>
   </section>
-  <div className="thesis-status"><span className="mini-label">EVIDENCE GRADE</span><strong>{enoughHistory?"Developing · broader history available":"Early · insufficient for a long-term conclusion"}</strong><p>{dates.length} UTC daily Explorer observations currently published. {meta.page_cap_reached?"The latest Explorer fetch reached its configured page cap, so history may be incomplete.":"The Explorer sample is not yet a verified long-term history."} DefiLlama fee data is Intents-specific and covers all integrators; the Explorer sample covers public 1Click only.</p></div>
+  <div className="thesis-status"><span className="mini-label">EVIDENCE GRADE</span><strong>{enoughHistory?"Developing · broader history available":"Early · insufficient for a long-term conclusion"}</strong><p>{dates.length} UTC daily Explorer observations currently published. {meta.page_cap_reached?"The latest Explorer fetch reached its configured page cap, so history may be incomplete.":"The Explorer sample is not yet a verified long-term history."} DefiLlama DEX context: {defiVolumeCoverage}. Its scope may be broader than public 1Click. The dedicated Intents fee adapter supplies a separate long-run economics series.</p></div>
   <h2 className="subsection-title">The three measurable pillars</h2>
   <div className="thesis-evidence-grid">
-   <article><div className="research-icon"><Activity size={18}/></div><span>01 · INTENTS USAGE</span><h3>{money(totalVolume)}</h3><p>{fmt(totalTx)} successful public 1Click swaps across {dates.length} retained UTC dates. This is observed Explorer sample volume, not all NEAR Intents activity.</p><small>{dates.length>=90?"90+ daily observations":"Short sample — trend not established"}</small></article>
+   <article><div className="research-icon"><Activity size={18}/></div><span>01 · INTENTS USAGE</span><h3>{money(totalVolume)}</h3><p>{fmt(totalTx)} successful public 1Click swaps across {dates.length} retained UTC dates. This is observed Explorer sample volume, not all NEAR Intents activity.</p><small>{dates.length>=90?"90+ Explorer daily observations":"Short Explorer sample — trend not established"}</small><small>{defiVolume90==null?"DefiLlama 90-day volume pending":money(defiVolume90)+" DefiLlama DEX volume · trailing 90d"}</small><small>{defiVolume365==null?"DefiLlama 365-day volume pending":money(defiVolume365)+" DefiLlama DEX volume · trailing 365d"}</small></article>
    <article><div className="research-icon"><Coins size={18}/></div><span>02 · PROTOCOL ECONOMICS</span><h3>{fees30==null?"Awaiting fee feed":money(fees30)}</h3><p>{fees30==null?"DefiLlama fee history has not yet been normalized.":"Trailing 30-day gross NEAR Intents fees across integrators. Captured revenue and holder buybacks are separate series."}</p><small>{revenue30==null?"Captured revenue pending":money(revenue30)+" captured · "+(monetization==null?"":monetization.toFixed(1)+"% of fees")}</small><small>{holderRevenue30==null?"Holder buybacks pending":money(holderRevenue30)+" holder buybacks"} · {protocolRevenue30==null?"Treasury series pending":money(protocolRevenue30)+" treasury"} · {supplySideRevenue30==null?"Solver share pending":money(supplySideRevenue30)+" solver/distribution share"}</small><small>{feeCoverage}</small></article>
    <article><div className="research-icon"><GitCompareArrows size={18}/></div><span>03 · SOURCE CROSS-CHECK</span><h3>{diagnostic.status==="compared"?diagnostic.median_gap_pct+"%":"Not yet comparable"}</h3><p>{diagnostic.status==="compared"?"Median absolute daily gap between Explorer and DefiLlama Intents volume over shared dates. This is diagnostic only, not formal reconciliation.":"A provider series and overlapping dates are still required before a gap can be calculated."}</p><small>{latestPair}</small><small>{diagnostic.status==="compared"?diagnostic.overlap_days+" overlapping days · maximum gap "+diagnostic.max_gap_pct+"% · scope mismatch disclosed":provider.status??"Provider context pending"}</small></article>
   </div>
