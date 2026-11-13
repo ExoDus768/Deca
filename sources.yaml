@@ -43,6 +43,13 @@ sources:
     format: json
     lineage_class: "independent_provider_context"
     notes: "DefiLlama NEAR Intents holder revenue represented by NEAR buybacks since 2026-02-23; buybacks are not burns."
+  defillama_intents_supply_side_revenue:
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/fees/near-intents?dataType=dailySupplySideRevenue"
+    format: json
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama NEAR Intents fees retained by solvers and distribution channels rather than captured by NEAR."
   nearblocks_intents_dashboard:
     enabled: false
     url: "TODO_FIND_DOCUMENTED_NEARBLOCKS_INTENTS_API"
