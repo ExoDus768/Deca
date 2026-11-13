@@ -45,8 +45,8 @@ def fetch_explorer_pages(name: str, cfg: dict) -> list[tuple[str, bytes]]:
         raise ValueError(f"{name}: required environment variable {auth_env} is not set")
 
     max_pages = int(os.environ.get("DECA_EXPLORER_MAX_PAGES", "10"))
-    if not 1 <= max_pages <= 100:
-        raise ValueError("DECA_EXPLORER_MAX_PAGES must be between 1 and 100")
+    if not 1 <= max_pages <= 500:
+        raise ValueError("DECA_EXPLORER_MAX_PAGES must be between 1 and 500")
 
     parts = urllib.parse.urlsplit(url)
     query = dict(urllib.parse.parse_qsl(parts.query, keep_blank_values=True))
