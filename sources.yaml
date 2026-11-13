@@ -3,7 +3,7 @@
 sources:
   intents_explorer:
     enabled: true
-    url: "https://explorer.near-intents.org/api/v0/transactions"
+    url: "https://explorer.near-intents.org/api/v0/transactions?numberOfTransactions=1000"
     auth_env: "NEAR_INTENTS_EXPLORER_TOKEN"
     format: json
     lineage_class: "first_party_explorer"
