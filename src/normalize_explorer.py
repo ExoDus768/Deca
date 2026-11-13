@@ -62,6 +62,9 @@ def main() -> None:
     volume = defaultdict(Decimal)
     counts = defaultdict(int)
     all_counts = defaultdict(int)
+    hourly_records = defaultdict(int)
+    hourly_success = defaultdict(int)
+    hourly_volume = defaultdict(Decimal)
     pair_volume = defaultdict(Decimal)
     pair_counts = defaultdict(int)
     skipped_missing_usd = 0
@@ -79,11 +82,14 @@ def main() -> None:
         timestamp = int(timestamp)
         day = dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc).date().isoformat()
         all_counts[day] += 1
+        hour = dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:00Z")
+        hourly_records[hour] += 1
         timestamps.append(timestamp)
         if row.get("status") != "SUCCESS":
             continue
         success_rows += 1
         counts[day] += 1
+        hourly_success[hour] += 1
         origin = str(row.get("originAsset") or "unknown")
         destination = str(row.get("destinationAsset") or "unknown")
         pair = f"{origin} → {destination}"
@@ -100,6 +106,7 @@ def main() -> None:
         if value < 0:
             raise ValueError(f"Negative amountInUsd value: {raw_usd!r}")
         volume[day] += value
+        hourly_volume[hour] += value
         pair_volume[pair] += value
 
     # Preserve deeper historical days across daily runs. For overlapping dates,
@@ -209,6 +216,30 @@ def main() -> None:
     }
     (METRICS / "daily_quality.json").write_text(
         json.dumps(quality_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    hourly_path = METRICS / "hourly_activity.json"
+    try:
+        previous_hourly = json.loads(hourly_path.read_text(encoding="utf-8")).get("series", {}).get("intents_explorer", {})
+    except (FileNotFoundError, json.JSONDecodeError):
+        previous_hourly = {}
+    hourly_keys = set(previous_hourly) | set(hourly_records)
+    hourly_series = {}
+    for hour_key in sorted(hourly_keys):
+        old = previous_hourly.get(hour_key, {})
+        records = max(int(old.get("unique_records", 0)), int(hourly_records.get(hour_key, 0)))
+        successful = max(int(old.get("successful_transactions", 0)), int(hourly_success.get(hour_key, 0)))
+        usd = max(float(old.get("volume_usd", 0)), float(hourly_volume.get(hour_key, 0)))
+        hourly_series[hour_key] = {
+            "unique_records": records,
+            "successful_transactions": successful,
+            "non_success_records": max(0, records - successful),
+            "success_rate_pct": round(successful / records * 100, 4) if records else None,
+            "volume_usd": usd,
+        }
+    hourly_doc = {
+        "metadata": {**common, "unit": "hourly_activity", "definition": "Unique Explorer records bucketed by UTC hour; SUCCESS counts and amountInUsd are aggregated at hour resolution. Earlier hour buckets are retained across snapshots."},
+        "series": {"intents_explorer": hourly_series},
+    }
+    hourly_path.write_text(json.dumps(hourly_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Read {raw_rows} raw rows; retained {len(rows)} unique records; removed {raw_rows-len(rows)} duplicates.")
     print(f"Normalized {success_rows} unique successful settlements; retained {len(merged_volume)} UTC volume days across refreshes.")
     print(f"Latest fetch: {len(latest_batch)} pages; configured cap {page_cap}; cap reached={page_cap_reached}.")
