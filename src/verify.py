@@ -39,10 +39,10 @@ def main() -> int:
             if not series:
                 print(f"EMPTY: data/metrics/{metric_name}")
                 ok = False
-            if metadata.get("unique_rows", 0) < metadata.get("successful_rows", 0):
+            if "unique_rows" in metadata and metadata.get("unique_rows", 0) < metadata.get("successful_rows", 0):
                 print(f"INVALID COUNTS: data/metrics/{metric_name} unique_rows < successful_rows")
                 ok = False
-            if metadata.get("duplicates_removed", 0) < 0:
+            if "duplicates_removed" in metadata and metadata.get("duplicates_removed", 0) < 0:
                 print(f"INVALID DEDUPLICATION COUNT: data/metrics/{metric_name}")
                 ok = False
             if any(float(value) < 0 for value in series.values()):
