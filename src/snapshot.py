@@ -165,7 +165,13 @@ def main() -> None:
                 manifest[rel] = sha256(raw)
                 print(f"saved {rel} sha256={manifest[rel]}")
         else:
-            raw = fetch(name, cfg)
+            try:
+                raw = fetch(name, cfg)
+            except Exception as exc:
+                if cfg.get("optional", False):
+                    print(f"OPTIONAL SOURCE UNAVAILABLE: {name}: {type(exc).__name__}: {exc}")
+                    continue
+                raise
             path = RAW / name / f"{day}.json"
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(raw)
