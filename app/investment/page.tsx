@@ -29,17 +29,24 @@ function recentTotal(series:Record<string,number>){
  const start=new Date(end);start.setUTCDate(start.getUTCDate()-29);
  return Object.entries(series).filter(([d])=>d>=start.toISOString().slice(0,10)&&d<=days[days.length-1]).reduce((s,[,v])=>s+Number(v||0),0);
 }
-const fees=feesDoc?.series?.defillama_near_fees??{};
-const revenue=feesDoc?.series?.defillama_near_revenue??{};
+const fees=feesDoc?.series?.defillama_intents_fees??{};
+const revenue=feesDoc?.series?.defillama_intents_revenue??{};
+const protocolRevenue=feesDoc?.series?.defillama_intents_protocol_revenue??{};
+const holderRevenue=feesDoc?.series?.defillama_intents_holders_revenue??{};
+const supplySideRevenue=feesDoc?.series?.defillama_intents_supply_side_revenue??{};
 const fees30=recentTotal(fees);
 const revenue30=recentTotal(revenue);
+const protocolRevenue30=recentTotal(protocolRevenue);
+const holderRevenue30=recentTotal(holderRevenue);
+const supplySideRevenue30=recentTotal(supplySideRevenue);
 const monetization=fees30&&revenue30!=null?revenue30/fees30*100:null;
+const holderCapture=fees30&&holderRevenue30!=null?holderRevenue30/fees30*100:null;
 const provider=reconciliation?.provider_context?.defillama_intents??{};
 const diagnostic=provider.diagnostic_comparison??{};
 const thesisTriggers=[
  ["Adoption persists","90-day Intents volume and successful swaps trend higher for at least two consecutive quarters.","Upgrade the thesis only after a longer, non-page-capped series confirms this."],
- ["Usage converts to economics","DefiLlama-reported protocol revenue remains at least 25% of fees over two consecutive quarters.","This is a proposed Deca test, not a historical fact or token-holder yield."],
- ["The evidence survives cross-checks","Explorer and DefiLlama Intents daily volume show a stable, explainable gap over 30+ overlapping days.","A scope mismatch must be explained before treating the two series as reconciled."]
+ ["Usage converts to economics","NEAR Intents captured revenue remains at least 25% of gross fees over two consecutive quarters, with solver/distribution shares disclosed.","This is a proposed Deca test. Captured revenue is not identical to token-holder revenue."],
+ ["The evidence survives cross-checks","Explorer and DefiLlama NEAR Intents daily volume show a stable, explainable gap over 30+ overlapping days.","Explorer is public 1Click only; DefiLlama fee adapter covers all integrators. The volume gap remains diagnostic until scope is aligned."]
 ];
 export default function Investment(){
  const enoughHistory=dates.length>=90&&!meta.page_cap_reached;
@@ -52,17 +59,17 @@ export default function Investment(){
    <p>The opportunity is that users can move value across chains through a unified intent-based experience, while NEAR's ecosystem captures economic value from the activity. The evidence today supports investigating that model; it does not yet prove durable adoption, competitive advantage, or value accruing to the NEAR token.</p>
    <div className="thesis-verdict"><strong>What would change our mind?</strong><span>Persistent activity growth and sustained fee-to-revenue conversion strengthen the case. Falling Intents usage, weakening monetization, or no credible token value capture weaken it.</span></div>
   </section>
-  <div className="thesis-status"><span className="mini-label">EVIDENCE GRADE</span><strong>{enoughHistory?"Developing · broader history available":"Early · insufficient for a long-term conclusion"}</strong><p>{dates.length} UTC daily Explorer observations currently published. {meta.page_cap_reached?"The latest Explorer fetch reached its configured page cap, so history may be incomplete.":"The Explorer sample is not yet a verified long-term history."} DefiLlama protocol fee/revenue data is a separate, broader NEAR ecosystem measure.</p></div>
+  <div className="thesis-status"><span className="mini-label">EVIDENCE GRADE</span><strong>{enoughHistory?"Developing · broader history available":"Early · insufficient for a long-term conclusion"}</strong><p>{dates.length} UTC daily Explorer observations currently published. {meta.page_cap_reached?"The latest Explorer fetch reached its configured page cap, so history may be incomplete.":"The Explorer sample is not yet a verified long-term history."} DefiLlama fee data is Intents-specific and covers all integrators; the Explorer sample covers public 1Click only.</p></div>
   <h2 className="subsection-title">The three measurable pillars</h2>
   <div className="thesis-evidence-grid">
    <article><div className="research-icon"><Activity size={18}/></div><span>01 · INTENTS USAGE</span><h3>{money(totalVolume)}</h3><p>{fmt(totalTx)} successful public 1Click swaps across {dates.length} retained UTC dates. This is observed Explorer sample volume, not all NEAR Intents activity.</p><small>{dates.length>=90?"90+ daily observations":"Short sample — trend not established"}</small></article>
-   <article><div className="research-icon"><Coins size={18}/></div><span>02 · PROTOCOL ECONOMICS</span><h3>{fees30==null?"Awaiting fee feed":money(fees30)}</h3><p>{fees30==null?"DefiLlama fee history has not yet been normalized.":"Trailing 30-day NEAR parent-protocol fees. Broader than NEAR Intents and not equivalent to token-holder value capture."}</p><small>{revenue30==null?"Revenue series pending":money(revenue30)+" revenue · "+(monetization==null?"":monetization.toFixed(1)+"% of fees")}</small></article>
+   <article><div className="research-icon"><Coins size={18}/></div><span>02 · PROTOCOL ECONOMICS</span><h3>{fees30==null?"Awaiting fee feed":money(fees30)}</h3><p>{fees30==null?"DefiLlama fee history has not yet been normalized.":"Trailing 30-day gross NEAR Intents fees across integrators. Captured revenue and holder buybacks are separate series."}</p><small>{revenue30==null?"Captured revenue pending":money(revenue30)+" captured · "+(monetization==null?"":monetization.toFixed(1)+"% of fees")+" · "+(holderRevenue30==null?"holder series pending":money(holderRevenue30)+" buybacks")}</small></article>
    <article><div className="research-icon"><GitCompareArrows size={18}/></div><span>03 · SOURCE CROSS-CHECK</span><h3>{diagnostic.status==="compared"?diagnostic.median_gap_pct+"%":"Not yet comparable"}</h3><p>{diagnostic.status==="compared"?"Median absolute daily gap between Explorer and DefiLlama Intents volume over shared dates. This is diagnostic only, not formal reconciliation.":"A provider series and overlapping dates are still required before a gap can be calculated."}</p><small>{diagnostic.status==="compared"?diagnostic.overlap_days+" overlapping days · scope mismatch disclosed":provider.status??"Provider context pending"}</small></article>
   </div>
   <section className="thesis-success-rate"><div><span className="mini-label">EXPLORER SAMPLE SUCCESS RATE</span><strong>{sampleSuccess}</strong><small>Basis: {rateBasis}</small></div><p>{meta.success_rate_pct!=null?"Calculated from unique timestamped Explorer records.":"Fallback calculated from published successful_rows ÷ raw_rows; this is a raw-snapshot rate and may include duplicate rows."} Do not confuse settlement success with user retention or economic quality.</p></section>
   <h2 className="subsection-title">Our falsifiable underwriting tests</h2>
   <div className="thesis-test-list">{thesisTriggers.map(([title,condition,meaning],i)=><article key={title}><span>0{i+1}</span><div><h3>{title}</h3><p>{condition}</p><small>{meaning}</small></div></article>)}</div>
-  <section className="thesis-risk"><CircleAlert size={19}/><div><strong>The biggest unresolved investment question is token value capture.</strong><p>DefiLlama's parent-protocol revenue is not the same as value accruing to NEAR holders. Deca still needs to connect protocol revenue, buybacks or burns, issuance, unlocks and dilution before making a token-level valuation claim. We will not label that factor measured until the data is verified.</p></div></section>
+  <section className="thesis-risk"><CircleAlert size={19}/><div><strong>The biggest unresolved investment question is token value capture.</strong><p>NEAR Intents has a separately reported holder-revenue series for buybacks beginning 2026-02-23. Buybacks are not burns, and neither gross fees nor captured revenue alone proves lasting per-token value. Deca still needs to compare buybacks with issuance, unlocks and dilution before making a token-level valuation claim.</p></div></section>
   <section className="rerun-card"><div className="rerun-head"><div><span className="mini-label">REPRODUCIBILITY</span><h2>Re-run this yourself.</h2><p>Clone the repo, keep the Explorer JWT in an environment variable, then run the same collection and verification steps.</p></div><Terminal size={22}/></div>
    <pre><code>{'git clone https://github.com/ExoDus768/Deca.git\ncd Deca\npython -m pip install -r requirements.txt\nexport NEAR_INTENTS_EXPLORER_TOKEN="YOUR_JWT"\nDECA_EXPLORER_MAX_PAGES=200 python src/snapshot.py\npython src/normalize_explorer.py\npython src/normalize_defillama.py\npython src/normalize_defillama_fees.py\nmake publish && make verify'}</code></pre>
    <p className="rerun-note">Never commit the JWT or paste it into the dashboard. DefiLlama endpoints are public; the Explorer token is required only for the authenticated Explorer fetch.</p>
