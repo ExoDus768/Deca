@@ -6,7 +6,7 @@
 
 ## Current status
 
-The authenticated NEAR Intents Explorer connection is live. Each manual refresh now follows the documented deposit-address/memo cursor, fetching up to 100 pages of 1,000 records (100,000 maximum) with a 5.1-second pause between requests to respect the partner rate limit. Each page is retained as a separate raw snapshot and included in the SHA-256 manifest. The workflow then normalizes successful settlements into UTC daily USD-volume and transaction-count series. The page cap is configurable with `DECA_EXPLORER_MAX_PAGES` (currently set to 100); reaching the cap does not prove that all historical records have been retrieved. DefiLlama, NearBlocks, and NearStats remain disabled pending adapter and lineage validation.
+The authenticated NEAR Intents Explorer connection is live. Each manual refresh now follows the documented deposit-address/memo cursor, fetching up to 100 pages of 1,000 records on the scheduled refresh (100,000 maximum); manual backfills can request up to 500 pages (500,000 maximum) with a 5.1-second pause between requests to respect the partner rate limit. Each page is retained as a separate raw snapshot and included in the SHA-256 manifest. The workflow then normalizes successful settlements into UTC daily USD-volume and transaction-count series. The page cap is configurable with `DECA_EXPLORER_MAX_PAGES` (currently set to 100); reaching the cap does not prove that all historical records have been retrieved. DefiLlama is now collected as a separate provider-context series. Its DEX spot-volume scope is not assumed to match public 1Click Explorer rows, so Deca does not calculate a false reconciliation gap. NearBlocks and NearStats remain candidates for further source-lineage validation. Repeated Explorer snapshots are de-duplicated by transaction ID or deposit-address/memo identity before metrics are calculated.
 
 ## Workflow
 
@@ -18,7 +18,8 @@ make verify
 
 - `make refresh` fetches configured HTTP JSON sources and records SHA-256 hashes.
 - `python src/normalize_explorer.py` builds daily UTC volume and successful-transaction metrics from Explorer snapshots.
-- `make publish` recomputes pairwise metric comparisons into `published/reconciliation.json`.
+- `python src/normalize_defillama.py` normalizes DefiLlama daily DEX volume as separate, non-comparable provider context.
+- `make publish` recomputes pairwise metric comparisons into `published/reconciliation.json` and reports provider-context availability without conflating scopes.
 - `make verify` runs offline: checks snapshot hashes and confirms published output matches a fresh computation.
 
 ## Project layout
@@ -51,7 +52,7 @@ The SQL is a starting query, not yet a verified source of the same transaction d
 
 ## Investment thesis
 
-The thesis must be generated from reconciled evidence, not from a preferred dashboard number. Each claim should cite the metric artifact, date range, source pair, observed gap, and limitations. This section will be expanded after the first valid data run.
+The thesis must be generated from evidence, not from a preferred dashboard number. Deca reports observed daily volume, transaction activity, average ticket size, activity concentration, coverage quality and source limitations. It explicitly separates provider-context metrics when definitions differ. A short or page-capped sample is not sufficient to claim sustained adoption, retention, profitability or token value.
 
 ## License
 
