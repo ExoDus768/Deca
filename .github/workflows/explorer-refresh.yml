@@ -18,6 +18,7 @@ jobs:
       - name: Fetch latest NEAR Intents Explorer transactions
         env:
           NEAR_INTENTS_EXPLORER_TOKEN: ${{ secrets.NEAR_INTENTS_EXPLORER_TOKEN }}
+          DECA_EXPLORER_MAX_PAGES: "100"
         run: python src/snapshot.py
       - name: Normalize successful settlements
         run: python src/normalize_explorer.py
