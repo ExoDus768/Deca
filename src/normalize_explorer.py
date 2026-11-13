@@ -61,6 +61,8 @@ def main() -> None:
 
     volume = defaultdict(Decimal)
     counts = defaultdict(int)
+    pair_volume = defaultdict(Decimal)
+    pair_counts = defaultdict(int)
     skipped_missing_usd = 0
     success_rows = 0
     timestamps = []
@@ -80,6 +82,10 @@ def main() -> None:
         day = dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc).date().isoformat()
         timestamps.append(timestamp)
         counts[day] += 1
+        origin = str(row.get("originAsset") or "unknown")
+        destination = str(row.get("destinationAsset") or "unknown")
+        pair = f"{origin} → {destination}"
+        pair_counts[pair] += 1
 
         raw_usd = row.get("amountInUsd")
         if raw_usd in (None, ""):
@@ -92,6 +98,7 @@ def main() -> None:
         if value < 0:
             raise ValueError(f"Negative amountInUsd value: {raw_usd!r}")
         volume[day] += value
+        pair_volume[pair] += value
 
     # Preserve deeper historical days across daily runs. For overlapping dates,
     # keep the highest observed daily total; successful settlements are immutable,
@@ -168,6 +175,22 @@ def main() -> None:
         json.dumps(volume_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (METRICS / "daily_transactions.json").write_text(
         json.dumps(count_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    pair_rows = [
+        {"pair": pair, "volume_usd": float(value), "successful_transactions": pair_counts[pair]}
+        for pair, value in sorted(pair_volume.items(), key=lambda item: item[1], reverse=True)
+    ]
+    pair_doc = {
+        "metadata": {
+            **common,
+            "unit": "USD",
+            "definition": "Observed successful public 1Click Explorer amountInUsd grouped by originAsset and destinationAsset. Asset IDs are retained exactly as returned by the API.",
+            "top_pair_count": len(pair_rows),
+            "pair_volume_sum_usd": round(sum(item["volume_usd"] for item in pair_rows), 8),
+        },
+        "pairs": pair_rows,
+    }
+    (METRICS / "asset_pair_breakdown.json").write_text(
+        json.dumps(pair_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Read {raw_rows} raw rows; retained {len(rows)} unique records; removed {raw_rows-len(rows)} duplicates.")
     print(f"Normalized {success_rows} unique successful settlements; retained {len(merged_volume)} UTC volume days across refreshes.")
     print(f"Latest fetch: {len(latest_batch)} pages; configured cap {page_cap}; cap reached={page_cap_reached}.")
