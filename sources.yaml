@@ -9,11 +9,12 @@ sources:
     lineage_class: "first_party_explorer"
     notes: "Official Explorer API. Read-only historical 1Click swaps; requires partner JWT. Public swaps only; does not include confidential volume."
   defillama_intents:
-    enabled: false
-    url: "https://api.llama.fi/protocol/near-intents"
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/dexs/near-intents?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=true&dataType=dailyVolume"
     format: json
-    lineage_class: "protocol_adapter"
-    notes: "Public protocol endpoint confirmed from DefiLlama protocol page. DEX volume methodology is spot token swaps; inspect response schema and compare scope before enabling."
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama daily DEX spot-swap volume. Pulled as separate context only; broader inclusion scope is not assumed to match public 1Click Explorer rows."
   nearblocks_intents_dashboard:
     enabled: false
     url: "TODO_FIND_DOCUMENTED_NEARBLOCKS_INTENTS_API"
@@ -43,7 +44,7 @@ sources:
 # These are hypotheses until the adapters and lineage audit are complete.
 metrics:
   intents_daily_volume_usd:
-    sources: [intents_explorer, defillama_intents]
+    sources: [intents_explorer]
     unit: USD
     tolerance_pct: 10
     definition: "Daily USD notional volume attributed specifically to NEAR Intents; public swaps only until confidential coverage is separately sourced."
