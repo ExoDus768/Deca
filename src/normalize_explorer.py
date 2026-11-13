@@ -61,6 +61,7 @@ def main() -> None:
 
     volume = defaultdict(Decimal)
     counts = defaultdict(int)
+    all_counts = defaultdict(int)
     pair_volume = defaultdict(Decimal)
     pair_counts = defaultdict(int)
     skipped_missing_usd = 0
@@ -68,9 +69,6 @@ def main() -> None:
     timestamps = []
 
     for row in rows:
-        if row.get("status") != "SUCCESS":
-            continue
-        success_rows += 1
         timestamp = row.get("createdAtTimestamp")
         if timestamp is None:
             created = row.get("createdAt")
@@ -80,7 +78,11 @@ def main() -> None:
             timestamp = int(parsed.timestamp())
         timestamp = int(timestamp)
         day = dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc).date().isoformat()
+        all_counts[day] += 1
         timestamps.append(timestamp)
+        if row.get("status") != "SUCCESS":
+            continue
+        success_rows += 1
         counts[day] += 1
         origin = str(row.get("originAsset") or "unknown")
         destination = str(row.get("destinationAsset") or "unknown")
@@ -191,6 +193,22 @@ def main() -> None:
     }
     (METRICS / "asset_pair_breakdown.json").write_text(
         json.dumps(pair_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    quality_days = sorted(set(all_counts) | set(counts))
+    quality_series = {
+        day: {
+            "unique_records": int(all_counts.get(day, 0)),
+            "successful_transactions": int(counts.get(day, 0)),
+            "non_success_records": int(all_counts.get(day, 0) - counts.get(day, 0)),
+            "success_rate_pct": round(counts.get(day, 0) / all_counts[day] * 100, 4) if all_counts.get(day, 0) else None,
+        }
+        for day in quality_days
+    }
+    quality_doc = {
+        "metadata": {**common, "unit": "daily_quality", "definition": "Daily success rate among unique Explorer records with timestamps; SUCCESS divided by all statuses."},
+        "series": {"intents_explorer": quality_series},
+    }
+    (METRICS / "daily_quality.json").write_text(
+        json.dumps(quality_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Read {raw_rows} raw rows; retained {len(rows)} unique records; removed {raw_rows-len(rows)} duplicates.")
     print(f"Normalized {success_rows} unique successful settlements; retained {len(merged_volume)} UTC volume days across refreshes.")
     print(f"Latest fetch: {len(latest_batch)} pages; configured cap {page_cap}; cap reached={page_cap_reached}.")
