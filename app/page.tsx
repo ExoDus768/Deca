@@ -30,7 +30,7 @@ export default function Home() {
   const days = Object.entries(volume?.series?.intents_explorer ?? {}).sort(([a],[b]) => a.localeCompare(b));
   const max = Math.max(1, ...days.map(([,v]) => v));
   return <main>
-    <nav className="nav wrap"><a className="brand" href="#"><span className="brand-mark">D</span><span>deca<span className="brand-dot">.</span></span></a><div className="nav-links"><a href="#dashboard">Dashboard</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14}/></a></div><span className="live"><i/> Evidence-first analytics</span></nav>
+    <nav className="nav wrap"><a className="brand" href="#"><span className="brand-mark">D</span><span>deca<span className="brand-dot">.</span></span></a><div className="nav-links"><a href="#dashboard">Dashboard</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca/actions/workflows/explorer-refresh.yml" target="_blank" rel="noreferrer">Refresh data <ArrowUpRight size={14}/></a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14}/></a></div><span className="live"><i/> Evidence-first analytics</span></nav>
     <section className="hero wrap">
       <div className="eyebrow"><span className="eyebrow-line"/> NEAR ECOSYSTEM DATA, RECONCILED</div>
       <h1>Numbers are easy.<br/><em>Trust is the work.</em></h1>
