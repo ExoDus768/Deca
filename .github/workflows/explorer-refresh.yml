@@ -29,7 +29,7 @@ jobs:
   refresh:
     runs-on: ubuntu-24.04
     env:
-      DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || '100' }}
+      DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '200') || '100' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -39,7 +39,7 @@ jobs:
       - name: Fetch latest NEAR Intents Explorer transactions
         env:
           NEAR_INTENTS_EXPLORER_TOKEN: ${{ secrets.NEAR_INTENTS_EXPLORER_TOKEN }}
-          DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || '100' }}
+          DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '200') || '100' }}
         run: python src/snapshot.py
       - name: Normalize successful settlements
         run: python src/normalize_explorer.py
@@ -60,6 +60,7 @@ jobs:
           name: near-intents-explorer-snapshot
           path: |
             data/raw/intents_explorer/
+            data/raw/defillama_intents/
             data/metrics/
             data/manifest.json
           if-no-files-found: error
