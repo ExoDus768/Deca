@@ -61,7 +61,7 @@ MIT — see `LICENSE`.
 
 ## Dashboard and deployment
 
-Deca includes a Next.js multi-page research workspace in `app/`: Overview, Analytics, Investment Signals, Methodology and Documentation. A top-left menu navigates between them. Analytics supports custom date windows, 7/30/90-day presets, daily/weekly/monthly aggregation, volume, transaction, average-ticket and success-rate indicators, previous-period comparisons, filters, tables and CSV export. It reads normalized public metric files from `data/metrics/` and the reconciliation report from `published/`. The Explorer refresh workflow now normalizes the latest collected snapshot, runs `make publish`, commits the public metric JSON files, and uploads the raw evidence as a short-lived GitHub Actions artifact. Raw transaction snapshots and the Explorer JWT are not exposed to the browser.
+Deca includes a Next.js multi-page research workspace in `app/`: Overview, Analytics, Investment Signals, Methodology and Documentation. A top-left menu navigates between them. Analytics supports custom date windows, 7/30/90-day presets, hourly/daily/weekly/monthly aggregation, volume, transaction, average-ticket and success-rate indicators, previous-period comparisons, filters, tables and CSV export. It reads normalized public metric files from `data/metrics/` and the reconciliation report from `published/`. The Explorer refresh workflow now normalizes the latest collected snapshot, runs `make publish`, commits the public metric JSON files, and uploads the raw evidence as a short-lived GitHub Actions artifact. Raw transaction snapshots and the Explorer JWT are not exposed to the browser.
 
 ### Run locally
 
