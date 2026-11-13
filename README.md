@@ -6,7 +6,7 @@
 
 ## Current status
 
-This repository is the reproducible project scaffold. Provider endpoints and metric adapters are deliberately marked **unverified** until checked against current provider documentation. The first CI run validates repository integrity and deterministic publication; it does not claim that live metrics have been reconciled yet.
+This repository is the reproducible project scaffold. The first source audit has identified a documented NEAR Intents Explorer API, a public DefiLlama protocol endpoint, a NearBlocks Intents dashboard, and a NearStats JSON endpoint. They are not interchangeable: source lineage and metric scope must be aligned before a pair is called independent. All live fetches remain disabled until response schemas and access requirements are implemented.
 
 ## Workflow
 
@@ -42,7 +42,7 @@ make verify
 
 ## Data-source status
 
-See `sources.yaml`. Placeholder endpoints are intentionally disabled. Do not run a live refresh until each URL and response schema has been verified against provider documentation.
+See `sources.yaml` and `docs/source-lineage.md`. The Explorer API requires a partner JWT and exposes public 1Click swap history; DefiLlama's protocol page publishes DEX volume; NearStats explicitly describes its headline volume as sourced from NEAR first-party totals and its public component as matching the Explorer. Therefore NearStats is a derived cross-check, not an independent peer for those totals.
 
 ## BigQuery note
 
