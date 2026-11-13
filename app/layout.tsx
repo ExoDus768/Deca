@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://deca-exo-c836.vercel.app"),
+  metadataBase: new URL("https://deca-dashboard.vercel.app"),
   title: { default: "Deca — NEAR Intents, on the evidence", template: "%s | Deca" },
   description: "An independent evidence and reconciliation dashboard for NEAR ecosystem metrics. Inspect sources, methodology, coverage and reproducible data.",
   applicationName: "Deca",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Deca — NEAR Intents, on the evidence",
     description: "Numbers are easy. Trust is the work. Explore source-aware NEAR ecosystem metrics.",
-    url: "https://deca-exo-c836.vercel.app",
+    url: "https://deca-dashboard.vercel.app",
     siteName: "Deca",
     type: "website",
   },
