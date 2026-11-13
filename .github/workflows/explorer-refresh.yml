@@ -2,6 +2,12 @@ name: Explorer API refresh
 
 on:
   workflow_dispatch:
+    inputs:
+      max_pages:
+        description: "Explorer pages to fetch for a deeper historical backfill (1–500)"
+        required: false
+        default: "200"
+        type: string
   push:
     branches: [main]
     paths:
@@ -31,10 +37,12 @@ jobs:
       - name: Fetch latest NEAR Intents Explorer transactions
         env:
           NEAR_INTENTS_EXPLORER_TOKEN: ${{ secrets.NEAR_INTENTS_EXPLORER_TOKEN }}
-          DECA_EXPLORER_MAX_PAGES: "100"
+          DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || '100' }}
         run: python src/snapshot.py
       - name: Normalize successful settlements
         run: python src/normalize_explorer.py
+      - name: Normalize DefiLlama provider context
+        run: python src/normalize_defillama.py
       - name: Publish reconciliation output
         run: make publish
       - name: Verify evidence and published output
