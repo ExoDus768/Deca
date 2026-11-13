@@ -2,7 +2,7 @@
 # Never treat two dashboards as independent merely because they publish different URLs.
 sources:
   intents_explorer:
-    enabled: false
+    enabled: true
     url: "https://explorer.near-intents.org/api/v0/transactions"
     auth_env: "NEAR_INTENTS_EXPLORER_TOKEN"
     format: json
