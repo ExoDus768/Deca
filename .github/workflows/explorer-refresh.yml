@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   refresh:
@@ -22,6 +22,13 @@ jobs:
         run: python src/snapshot.py
       - name: Normalize successful settlements
         run: python src/normalize_explorer.py
+      - name: Publish reconciliation output
+        run: make publish
+      - name: Commit latest public metrics
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Publish latest verified Explorer metrics"
+          file_pattern: "data/metrics/*.json published/reconciliation.json"
       - name: Upload raw and normalized evidence
         uses: actions/upload-artifact@v4
         with:
