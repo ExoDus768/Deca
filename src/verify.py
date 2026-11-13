@@ -122,6 +122,41 @@ def main() -> int:
             print(f"INVALID ASSET-PAIR JSON: {exc}")
             ok = False
 
+    # Validate optional Intents-specific DefiLlama economics without masking provider outages.
+    fees_path = ROOT / "data" / "metrics" / "defillama_fees_revenue.json"
+    if fees_path.exists():
+        try:
+            fees_doc = json.loads(fees_path.read_text(encoding="utf-8"))
+            fees_meta = fees_doc.get("metadata", {})
+            fees_series = fees_doc.get("series", {})
+            required_economic_series = ("defillama_intents_fees", "defillama_intents_revenue")
+            missing_core = [name for name in required_economic_series if not fees_series.get(name)]
+            if fees_meta.get("status") == "available" and missing_core:
+                print("INVALID DEFI LLAMA ECONOMICS: available status without fees/revenue series: " + ", ".join(missing_core))
+                ok = False
+            for name, values in fees_series.items():
+                if not isinstance(values, dict):
+                    print(f"INVALID DEFI LLAMA SERIES: {name}")
+                    ok = False
+                    continue
+                for day, value in values.items():
+                    try:
+                        number = float(value)
+                        if not __import__("math").isfinite(number):
+                            raise ValueError("non-finite")
+                    except (TypeError, ValueError):
+                        print(f"INVALID DEFI LLAMA VALUE: {name} {day}={value!r}")
+                        ok = False
+            if not fees_series or not any(bool(v) for v in fees_series.values()):
+                print("DATA WARNING — DefiLlama Intents economics are not yet available; Explorer metrics remain usable.")
+            elif fees_meta.get("status") != "available":
+                print("DATA WARNING — DefiLlama Intents economics are partial: " + str(fees_meta.get("status")))
+        except (ValueError, TypeError, json.JSONDecodeError) as exc:
+            print(f"INVALID DEFI LLAMA ECONOMICS JSON: {exc}")
+            ok = False
+    else:
+        print("DATA WARNING — DefiLlama Intents fee/revenue series have not yet been published.")
+
     published_path = ROOT / "published" / "reconciliation.json"
     expected = reconcile.run()
     if not published_path.exists():
