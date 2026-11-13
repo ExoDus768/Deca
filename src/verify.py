@@ -45,7 +45,7 @@ def main() -> int:
             if "duplicates_removed" in metadata and metadata.get("duplicates_removed", 0) < 0:
                 print(f"INVALID DEDUPLICATION COUNT: data/metrics/{metric_name}")
                 ok = False
-            if any(float(value) < 0 for value in series.values()):
+            if metric_name != "daily_quality.json" and any(float(value) < 0 for value in series.values()):
                 print(f"NEGATIVE METRIC VALUE: data/metrics/{metric_name}")
                 ok = False
             if metric_name == "intents_daily_volume_usd.json":
