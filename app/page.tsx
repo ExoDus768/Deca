@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import RefreshButton from "./refresh-button";
 import path from "node:path";
 import { Activity, ArrowUpRight, BarChart3, CheckCircle2, Clock3, Database, FileCheck2, GitBranch, ShieldCheck } from "lucide-react";
 
@@ -31,7 +32,7 @@ export default function Home() {
     <nav className="nav wrap">
       <a className="brand" href="#"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a>
       <div className="nav-links"><a href="#dashboard">Dashboard</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Documentation <ArrowUpRight size={14}/></a></div>
-      <a className="nav-cta" href="https://github.com/ExoDus768/Deca/actions/workflows/explorer-refresh.yml" target="_blank" rel="noreferrer">Refresh data <ArrowUpRight size={14}/></a>
+      <RefreshButton />
     </nav>
 
     <section className="dashboard wrap" id="dashboard">
