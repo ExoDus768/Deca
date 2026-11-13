@@ -16,7 +16,8 @@ make publish
 make verify
 ```
 
-- `make refresh` fetches configured HTTP JSON sources and records SHA-256 hashes.\n- `python src/normalize_explorer.py` builds daily UTC volume and successful-transaction metrics from Explorer snapshots.
+- `make refresh` fetches configured HTTP JSON sources and records SHA-256 hashes.
+- `python src/normalize_explorer.py` builds daily UTC volume and successful-transaction metrics from Explorer snapshots.
 - `make publish` recomputes pairwise metric comparisons into `published/reconciliation.json`.
 - `make verify` runs offline: checks snapshot hashes and confirms published output matches a fresh computation.
 
