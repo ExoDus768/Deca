@@ -35,7 +35,7 @@ export default function SiteNav() {
           <a className="menu-github" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer"><Github size={15}/> Source repository <span>↗</span></a>
         </div>}
       </div>
-      <Link className="brand" href="/"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></Link>
+      <Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">◈</span><span>deca<span className="brand-dot">.</span></span></Link>
       <div className="header-right"><span className="header-status"><i/> DATA WORKSPACE</span><a className="header-github" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer"><Github size={15}/></a></div>
     </div>
   </header>;
