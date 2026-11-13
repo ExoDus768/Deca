@@ -14,7 +14,8 @@ OUT = ROOT / "data" / "metrics" / "defillama_daily_volume_usd.json"
 
 
 def main():
-    files = sorted(RAW.glob("*.json"))
+    today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+    files = sorted(p for p in RAW.glob("*.json") if p.stem == today)
     if not files:
         doc = {
             "metadata": {
