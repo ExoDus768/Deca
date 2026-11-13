@@ -7,9 +7,11 @@ function read(file:string){try{return JSON.parse(fs.readFileSync(path.join(proce
 export default function AnalyticsPage(){
  const v=read("data/metrics/intents_daily_volume_usd.json");
  const t=read("data/metrics/daily_transactions.json");
+ const q=read("data/metrics/daily_quality.json");
  const volume=v?.series?.intents_explorer??{};
  const tx=t?.series?.intents_explorer??{};
- const dates=[...new Set([...Object.keys(volume),...Object.keys(tx)])].sort();
- const rows=dates.map(date=>({date,volume:Number(volume[date]??0),transactions:Number(tx[date]??0)}));
+ const quality=q?.series?.intents_explorer??{};
+ const dates=[...new Set([...Object.keys(volume),...Object.keys(tx),...Object.keys(quality)])].sort();
+ const rows=dates.map(date=>({date,volume:Number(volume[date]??0),transactions:Number(tx[date]??0),records:Number(quality[date]?.unique_records??0),successRate:quality[date]?.success_rate_pct==null?null:Number(quality[date].success_rate_pct)}));
  return <main><SiteNav/><AnalyticsClient rows={rows} metadata={v?.metadata??{}}/><footer className="footer wrap"><a className="brand" href="/"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a><span>Analytics · Evidence first.</span><span>UTC</span></footer></main>;
 }
