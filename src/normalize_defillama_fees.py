@@ -1,4 +1,4 @@
-"""Normalize DefiLlama NEAR protocol fees and revenue as parent-level context."""
+"""Normalize DefiLlama's NEAR Intents fee and value-capture series."""
 import datetime as dt
 import json
 import pathlib
@@ -8,8 +8,11 @@ RAW = ROOT / "data" / "raw"
 OUT = ROOT / "data" / "metrics" / "defillama_fees_revenue.json"
 
 SOURCES = {
-    "defillama_near_fees": "dailyFees",
-    "defillama_near_revenue": "dailyRevenue",
+    "defillama_intents_fees": "dailyFees",
+    "defillama_intents_revenue": "dailyRevenue",
+    "defillama_intents_protocol_revenue": "dailyProtocolRevenue",
+    "defillama_intents_holders_revenue": "dailyHoldersRevenue",
+    "defillama_intents_supply_side_revenue": "dailySupplySideRevenue",
 }
 
 
@@ -29,8 +32,8 @@ def load_series(source: str):
             continue
         day = dt.datetime.fromtimestamp(int(point[0]), tz=dt.timezone.utc).date().isoformat()
         value = float(point[1])
-        if value < 0:
-            raise ValueError("Negative daily value returned")
+        if not __import__("math").isfinite(value):
+            raise ValueError("DefiLlama returned a non-finite value")
         series[day] = value
     if not series:
         raise ValueError("No valid daily points")
@@ -42,19 +45,27 @@ def main():
         "source": "DefiLlama",
         "status": "available",
         "unit": "USD",
-        "adapter_version": "1.0.0",
-        "source_scope": "NEAR Protocol parent protocol fee and revenue series; broader than NEAR Intents alone",
+        "adapter_version": "2.0.0",
+        "source_scope": "NEAR Intents-specific fee adapter; all integrators, not only public 1Click Explorer transactions",
         "date_timezone": "UTC",
         "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "methodology_url": "https://docs.llama.fi/analysts/data-definitions",
-        "investment_caveat": "Protocol-level fees and revenue are not equivalent to NEAR token-holder value capture. This parent protocol series may include products beyond NEAR Intents.",
+        "adapter_methodology_url": "https://github.com/DefiLlama/dimension-adapters/tree/master/fees/near-intents",
+        "caveats": [
+            "Fees are gross user swap fees, including protocol and affiliate/distribution fees.",
+            "Revenue is NEAR's net captured revenue based on revenue-wallet sweeps.",
+            "Holder revenue represents NEAR buybacks from captured Intents revenue since 2026-02-23; buybacks are not burns.",
+            "Protocol revenue and holder revenue attribution is not a guarantee of direct spot-token price appreciation.",
+            "This source covers all Intents integrators and therefore does not have identical scope to the public 1Click Explorer sample.",
+        ],
     }
     series = {}
-    for source in SOURCES:
+    for source, data_type in SOURCES.items():
         try:
             values, file_name = load_series(source)
             series[source] = values
             metadata[source + "_snapshot"] = file_name
+            metadata[source + "_days"] = len(values)
             if not values:
                 metadata["status"] = "partial"
                 metadata[source + "_note"] = file_name
@@ -64,7 +75,7 @@ def main():
             metadata[source + "_note"] = f"{type(exc).__name__}: {exc}"[:250]
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"metadata": metadata, "series": series}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print("Normalized DefiLlama daily fee/revenue context: " + ", ".join(f"{k}={len(v)} days" for k, v in series.items()))
+    print("Normalized NEAR Intents-specific DefiLlama data: " + ", ".join(f"{k}={len(v)} days" for k, v in series.items()))
 
 
 if __name__ == "__main__":
