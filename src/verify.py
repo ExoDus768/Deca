@@ -30,6 +30,7 @@ def main() -> int:
     base_doc = json.loads(base_metric.read_text(encoding="utf-8")) if base_metric.exists() else {}
     base_metadata = base_doc.get("metadata", {})
     require_enhanced = str(base_metadata.get("adapter_version", "0")) >= "1.2.0"
+    require_hourly = str(base_metadata.get("adapter_version", "0")) >= "1.3.0"
 
     # Validate normalized daily metric invariants and explicit coverage metadata.
     for metric_name in ("intents_daily_volume_usd.json", "daily_transactions.json", "daily_quality.json"):
@@ -76,6 +77,29 @@ def main() -> int:
                         ok = False
         except (ValueError, TypeError, json.JSONDecodeError) as exc:
             print(f"INVALID METRIC: data/metrics/{metric_name}: {exc}")
+            ok = False
+
+    hourly_path = ROOT / "data" / "metrics" / "hourly_activity.json"
+    if not hourly_path.exists():
+        if require_hourly:
+            print("MISSING: data/metrics/hourly_activity.json")
+            ok = False
+    else:
+        try:
+            hourly_doc = json.loads(hourly_path.read_text(encoding="utf-8"))
+            hourly = hourly_doc.get("series", {}).get("intents_explorer", {})
+            if not hourly:
+                print("EMPTY: data/metrics/hourly_activity.json")
+                ok = False
+            for hour, item in hourly.items():
+                records = int(item.get("unique_records", 0))
+                successful = int(item.get("successful_transactions", 0))
+                rate = item.get("success_rate_pct")
+                if successful > records or (rate is not None and not 0 <= float(rate) <= 100):
+                    print(f"INVALID HOURLY QUALITY: {hour}")
+                    ok = False
+        except (ValueError, TypeError, json.JSONDecodeError) as exc:
+            print(f"INVALID HOURLY JSON: {exc}")
             ok = False
 
     pair_path = ROOT / "data" / "metrics" / "asset_pair_breakdown.json"
