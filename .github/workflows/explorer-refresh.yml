@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   refresh:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,12 +19,15 @@ jobs:
         env:
           NEAR_INTENTS_EXPLORER_TOKEN: ${{ secrets.NEAR_INTENTS_EXPLORER_TOKEN }}
         run: python src/snapshot.py
-      - name: Upload raw Explorer snapshot
+      - name: Normalize successful settlements
+        run: python src/normalize_explorer.py
+      - name: Upload raw and normalized evidence
         uses: actions/upload-artifact@v4
         with:
           name: near-intents-explorer-snapshot
           path: |
             data/raw/intents_explorer/
+            data/metrics/
             data/manifest.json
           if-no-files-found: error
           retention-days: 14
