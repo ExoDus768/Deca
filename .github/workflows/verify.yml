@@ -12,4 +12,5 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt
-      - run: python -m py_compile src/*.py\n      - run: make verify
+      - run: python -m py_compile src/*.py
+      - run: make verify
