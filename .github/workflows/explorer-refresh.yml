@@ -45,7 +45,7 @@ jobs:
         run: python src/normalize_explorer.py
       - name: Normalize DefiLlama provider context
         run: python src/normalize_defillama.py
-      - name: Normalize DefiLlama NEAR protocol fees and revenue
+      - name: Normalize NEAR Intents fees, revenue and token-holder capture
         run: python src/normalize_defillama_fees.py
       - name: Publish reconciliation output
         run: make publish
@@ -63,8 +63,11 @@ jobs:
           path: |
             data/raw/intents_explorer/
             data/raw/defillama_intents/
-            data/raw/defillama_near_fees/
-            data/raw/defillama_near_revenue/
+            data/raw/defillama_intents_fees/
+            data/raw/defillama_intents_revenue/
+            data/raw/defillama_intents_protocol_revenue/
+            data/raw/defillama_intents_holders_revenue/
+            data/raw/defillama_intents_supply_side_revenue/
             data/metrics/
             data/manifest.json
           if-no-files-found: error
