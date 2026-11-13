@@ -6,7 +6,7 @@
 
 ## Current status
 
-The authenticated NEAR Intents Explorer connection is live. Each manual refresh now follows the documented deposit-address/memo cursor, fetching up to 10 pages of 1,000 records (10,000 maximum) with a 5.1-second pause between requests to respect the partner rate limit. Each page is retained as a separate raw snapshot and included in the SHA-256 manifest. The workflow then normalizes successful settlements into UTC daily USD-volume and transaction-count series. The page cap is configurable with `DECA_EXPLORER_MAX_PAGES`; reaching the cap does not prove that all historical records have been retrieved. DefiLlama, NearBlocks, and NearStats remain disabled pending adapter and lineage validation.
+The authenticated NEAR Intents Explorer connection is live. Each manual refresh now follows the documented deposit-address/memo cursor, fetching up to 100 pages of 1,000 records (100,000 maximum) with a 5.1-second pause between requests to respect the partner rate limit. Each page is retained as a separate raw snapshot and included in the SHA-256 manifest. The workflow then normalizes successful settlements into UTC daily USD-volume and transaction-count series. The page cap is configurable with `DECA_EXPLORER_MAX_PAGES` (currently set to 100); reaching the cap does not prove that all historical records have been retrieved. DefiLlama, NearBlocks, and NearStats remain disabled pending adapter and lineage validation.
 
 ## Workflow
 
