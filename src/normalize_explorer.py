@@ -133,7 +133,7 @@ def main() -> None:
     page_cap_reached = len(latest_batch) >= page_cap
     generated = dt.datetime.now(dt.timezone.utc).isoformat()
     common = {
-        "adapter_version": "1.1.0",
+        "adapter_version": "1.2.0",
         "source": "intents_explorer",
         "date_timezone": "UTC",
         "source_scope": "public 1Click swap transactions returned by Explorer API",
