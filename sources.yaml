@@ -15,6 +15,20 @@ sources:
     format: json
     lineage_class: "independent_provider_context"
     notes: "DefiLlama daily DEX spot-swap volume. Pulled as separate context only; broader inclusion scope is not assumed to match public 1Click Explorer rows."
+  defillama_near_fees:
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/fees/near-protocol?dataType=dailyFees"
+    format: json
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama NEAR parent-protocol daily fees. Broader than NEAR Intents alone; use for ecosystem monetization context, not token-holder value capture."
+  defillama_near_revenue:
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/fees/near-protocol?dataType=dailyRevenue"
+    format: json
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama NEAR parent-protocol daily revenue. Broader than NEAR Intents alone; not equivalent to NEAR token-holder value capture."
   nearblocks_intents_dashboard:
     enabled: false
     url: "TODO_FIND_DOCUMENTED_NEARBLOCKS_INTENTS_API"
