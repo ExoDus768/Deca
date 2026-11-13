@@ -10,13 +10,12 @@ function readMetric(name: string): MetricDoc | null {
 const volume = readMetric("intents_daily_volume_usd.json");
 const txs = readMetric("daily_transactions.json");
 function sumSeries(doc: MetricDoc | null) {
-  const values = Object.values(doc?.series?.intents_explorer ?? {});
-  return values.reduce((a, b) => a + Number(b || 0), 0);
+  return Object.values(doc?.series?.intents_explorer ?? {}).reduce((a, b) => a + Number(b || 0), 0);
 }
 function compact(n: number, currency = false) {
   if (!n) return "—";
-  return currency ? "$" + new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 2 }).format(n) :
-    new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 2 }).format(n);
+  const value = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 2 }).format(n);
+  return currency ? "$" + value : value;
 }
 function dateRange(doc: MetricDoc | null) {
   const days = Object.keys(doc?.series?.intents_explorer ?? {}).sort();
@@ -25,36 +24,54 @@ function dateRange(doc: MetricDoc | null) {
 export default function Home() {
   const volumeTotal = sumSeries(volume);
   const txTotal = sumSeries(txs);
-  const meta = volume?.metadata ?? txs?.metadata;
   const ready = Boolean(volume && txs && volumeTotal > 0 && txTotal > 0);
   const days = Object.entries(volume?.series?.intents_explorer ?? {}).sort(([a],[b]) => a.localeCompare(b));
   const max = Math.max(1, ...days.map(([,v]) => v));
   return <main>
-    <nav className="nav wrap"><a className="brand" href="#"><span className="brand-mark">D</span><span>deca<span className="brand-dot">.</span></span></a><div className="nav-links"><a href="#dashboard">Dashboard</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca/actions/workflows/explorer-refresh.yml" target="_blank" rel="noreferrer">Refresh data <ArrowUpRight size={14}/></a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14}/></a></div><span className="live"><i/> Evidence-first analytics</span></nav>
+    <nav className="nav wrap">
+      <a className="brand" href="#"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a>
+      <div className="nav-links"><a href="#dashboard">Explore data</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Documentation <ArrowUpRight size={14}/></a></div>
+      <a className="nav-cta" href="https://github.com/ExoDus768/Deca/actions/workflows/explorer-refresh.yml" target="_blank" rel="noreferrer">Refresh data <ArrowUpRight size={14}/></a>
+    </nav>
+
     <section className="hero wrap">
-      <div className="eyebrow"><span className="eyebrow-line"/> NEAR ECOSYSTEM DATA, RECONCILED</div>
-      <h1>Numbers are easy.<br/><em>Trust is the work.</em></h1>
-      <p className="hero-copy">Deca independently tracks, normalizes and compares NEAR ecosystem metrics. Every number should have a source, a definition, a time window and evidence you can inspect.</p>
-      <div className="hero-actions"><a className="primary" href="#dashboard">Explore the evidence <ArrowUpRight size={16}/></a><a className="secondary" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Inspect the methodology <GitBranch size={15}/></a></div>
-      <div className="hero-foot"><span><ShieldCheck size={15}/> Reproducible by design</span><span><Database size={15}/> Source-aware metrics</span><span><FileCheck2 size={15}/> Auditable snapshots</span></div>
+      <div className="hero-copy">
+        <div className="eyebrow"><span className="eyebrow-dot"/> INDEPENDENT ECOSYSTEM INTELLIGENCE</div>
+        <h1>See the numbers.<br/><span>Understand the signal.</span></h1>
+        <p>Deca turns fragmented ecosystem data into transparent, comparable evidence. Explore what the numbers say, where they come from, and what they leave out.</p>
+        <div className="hero-actions"><a className="primary" href="#dashboard">Explore the dashboard <ArrowUpRight size={16}/></a><a className="text-link" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">How Deca works <ArrowUpRight size={15}/></a></div>
+      </div>
+      <div className="hero-art" aria-label="Abstract data visualization">
+        <div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-core"><span>DECA</span><strong>01</strong></div>
+        <div className="art-chip chip-top"><i/> Evidence verified</div><div className="art-chip chip-bottom"><BarChart3 size={15}/> Data, with context</div>
+        <div className="art-spark spark-one"/><div className="art-spark spark-two"/>
+      </div>
     </section>
+
     <section className="dashboard wrap" id="dashboard">
-      <div className="section-head"><div><div className="eyebrow">01 / LIVE EVIDENCE</div><h2>NEAR Intents overview</h2><p>Public 1Click Explorer transactions. Not a claim of total network-wide Intents volume.</p></div><span className={ready ? "status good" : "status pending"}><i/>{ready ? "Metrics loaded" : "Awaiting published snapshot"}</span></div>
+      <div className="section-head"><div><div className="eyebrow">THE DATA ROOM <span className="eyebrow-index">/ 01</span></div><h2>NEAR Intents, in focus.</h2><p>A transparent view of public 1Click Explorer activity.</p></div><span className={ready ? "status good" : "status pending"}><i/>{ready ? "Snapshot available" : "Waiting for snapshot"}</span></div>
       <div className="stats">
-        <article className="stat"><div className="stat-label">Observed successful volume <BarChart3 size={16}/></div><strong>{ready ? compact(volumeTotal, true) : "—"}</strong><small>USD · Explorer amountInUsd</small></article>
-        <article className="stat"><div className="stat-label">Successful transactions <Activity size={16}/></div><strong>{ready ? compact(txTotal) : "—"}</strong><small>SUCCESS status only</small></article>
-        <article className="stat"><div className="stat-label">Date coverage <Clock3 size={16}/></div><strong className="coverage">{ready ? Object.keys(volume?.series?.intents_explorer ?? {}).length + " days" : "—"}</strong><small>{dateRange(volume)}</small></article>
+        <article className="stat stat-primary"><div className="stat-label">Observed successful volume <BarChart3 size={17}/></div><strong>{ready ? compact(volumeTotal, true) : "—"}</strong><small>USD · Explorer amountInUsd</small><span className="stat-index">01</span></article>
+        <article className="stat"><div className="stat-label">Successful transactions <Activity size={17}/></div><strong>{ready ? compact(txTotal) : "—"}</strong><small>SUCCESS status only</small><span className="stat-index">02</span></article>
+        <article className="stat"><div className="stat-label">Date coverage <Clock3 size={17}/></div><strong className="coverage">{ready ? Object.keys(volume?.series?.intents_explorer ?? {}).length + " days" : "—"}</strong><small>{dateRange(volume)}</small><span className="stat-index">03</span></article>
       </div>
-      <div className="chart-card"><div className="chart-top"><div><h3>Daily observed volume</h3><p>UTC · Successful public 1Click transactions</p></div><span className="chart-unit">USD</span></div>
-        {days.length ? <div className="bars">{days.map(([day,value])=><div className="bar-col" key={day} title={day + ": $" + value.toLocaleString()}><div className="bar-value">{compact(value,true)}</div><div className="bar" style={{height: Math.max(5, value/max*150) + "px"}}/><span>{day.slice(5)}</span></div>)}</div> : <div className="empty-chart"><div className="empty-icon"><BarChart3 size={22}/></div><strong>Evidence is being prepared</strong><span>The dashboard will populate automatically when a verified snapshot is published from GitHub Actions.</span></div>}
+      <div className="chart-card">
+        <div className="chart-top"><div><span className="mini-label">ACTIVITY OVER TIME</span><h3>Daily observed volume</h3><p>Successful public 1Click transactions · UTC</p></div><span className="chart-unit">USD <span>↗</span></span></div>
+        {days.length ? <div className="bars">{days.map(([day,value])=><div className="bar-col" key={day} title={day + ": $" + value.toLocaleString()}><div className="bar-value">{compact(value,true)}</div><div className="bar" style={{height: Math.max(5, value/max*150) + "px"}}/><span>{day.slice(5)}</span></div>)}</div> : <div className="empty-chart"><div className="empty-icon"><BarChart3 size={23}/></div><strong>Your evidence dashboard is getting ready.</strong><span>Published metrics will appear here automatically after a verified GitHub Actions snapshot.</span></div>}
+        <div className="chart-foot"><span><i/> Explorer source</span><span>Daily totals · USD</span></div>
       </div>
-      <div className="notice"><ShieldCheck size={18}/><div><strong>Scope matters</strong><span>This feed covers public 1Click swap transactions returned by the Explorer API. It excludes activity not represented in that endpoint. A capped page run is a sample, not complete historical coverage.</span></div></div>
+      <div className="notice"><div className="notice-icon"><ShieldCheck size={20}/></div><div><strong>Read the scope before the headline.</strong><span>This feed covers public 1Click swap transactions returned by the Explorer API. It does not represent total network-wide NEAR Intents volume. Capped page runs are samples, not complete historical coverage.</span></div><a href="#methodology">Our methodology <ArrowUpRight size={14}/></a></div>
     </section>
-    <section className="method wrap" id="methodology"><div className="eyebrow">02 / HOW TO READ DECA</div><h2>Evidence before conclusions.</h2><div className="method-grid">
-      <article><span>01</span><h3>Collect</h3><p>Fetch provider-native records with documented pagination and rate limits. Preserve raw snapshots and SHA-256 manifests.</p></article>
-      <article><span>02</span><h3>Normalize</h3><p>Apply explicit status filters, UTC date boundaries, units and versioned adapters. Never silently fill missing values.</p></article>
-      <article><span>03</span><h3>Reconcile</h3><p>Compare only metrics with matching definitions and overlapping dates. Report gaps, missing sources and limitations.</p></article>
-    </div></section>
-    <footer className="footer wrap"><a className="brand" href="#"><span className="brand-mark">D</span><span>deca<span className="brand-dot">.</span></span></a><span>Built around evidence, not vanity metrics.</span><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Open source <ArrowUpRight size={14}/></a></footer>
+
+    <section className="method wrap" id="methodology">
+      <div className="method-intro"><div className="eyebrow">BUILT FOR CLARITY <span className="eyebrow-index">/ 02</span></div><h2>Evidence is the<br/><span>starting point.</span></h2><p>Good analysis is more than a chart. Every metric needs a traceable source, a consistent definition, and an honest account of its limits.</p></div>
+      <div className="method-grid">
+        <article><div className="method-top"><span>01</span><Database size={19}/></div><h3>Collect</h3><p>Fetch provider-native records with documented pagination and rate limits. Preserve raw snapshots and SHA-256 manifests.</p><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Explore the data pipeline <ArrowUpRight size={14}/></a></article>
+        <article><div className="method-top"><span>02</span><Activity size={19}/></div><h3>Normalize</h3><p>Apply explicit status filters, UTC date boundaries, units and versioned adapters. Never silently fill missing values.</p><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">See the definitions <ArrowUpRight size={14}/></a></article>
+        <article><div className="method-top"><span>03</span><FileCheck2 size={19}/></div><h3>Reconcile</h3><p>Compare only metrics with matching definitions and overlapping dates. Report gaps, missing sources and limitations.</p><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Review the evidence <ArrowUpRight size={14}/></a></article>
+      </div>
+    </section>
+    <section className="closing wrap"><div><span className="eyebrow">OPEN BY DESIGN</span><h2>Trust what you can verify.</h2><p>Deca is built in public. Inspect the source, challenge the definitions, and follow the evidence.</p></div><a className="primary" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Explore Deca on GitHub <ArrowUpRight size={16}/></a></section>
+    <footer className="footer wrap"><a className="brand" href="#"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a><span>Independent ecosystem intelligence.</span><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Open source <ArrowUpRight size={14}/></a></footer>
   </main>;
 }
