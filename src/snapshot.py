@@ -2,6 +2,7 @@
 import datetime as dt
 import hashlib
 import json
+import os
 import pathlib
 import urllib.request
 
@@ -24,11 +25,18 @@ def fetch(name: str, cfg: dict) -> bytes:
         raise ValueError(f"{name}: configure a verified HTTP(S) endpoint")
     body = cfg.get("body")
     payload = json.dumps(body).encode("utf-8") if body is not None else None
+    headers = {"Content-Type": "application/json", "User-Agent": "deca-evidence-pipeline/0.1"}
+    auth_env = cfg.get("auth_env")
+    if auth_env:
+        token = os.environ.get(auth_env)
+        if not token:
+            raise ValueError(f"{name}: required environment variable {auth_env} is not set")
+        headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(
         url,
         data=payload,
         method=cfg.get("method", "POST" if payload else "GET"),
-        headers={"Content-Type": "application/json", "User-Agent": "deca-evidence-pipeline/0.1"},
+        headers=headers,
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         raw = response.read()
