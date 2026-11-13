@@ -15,20 +15,34 @@ sources:
     format: json
     lineage_class: "independent_provider_context"
     notes: "DefiLlama daily DEX spot-swap volume. Pulled as separate context only; broader inclusion scope is not assumed to match public 1Click Explorer rows."
-  defillama_near_fees:
+  defillama_intents_fees:
     enabled: true
     optional: true
-    url: "https://api.llama.fi/summary/fees/near-protocol?dataType=dailyFees"
+    url: "https://api.llama.fi/summary/fees/near-intents?dataType=dailyFees"
     format: json
     lineage_class: "independent_provider_context"
-    notes: "DefiLlama NEAR parent-protocol daily fees. Broader than NEAR Intents alone; use for ecosystem monetization context, not token-holder value capture."
-  defillama_near_revenue:
+    notes: "DefiLlama NEAR Intents fee adapter: gross swap fees across integrators, sourced from Dune and NEAR on-chain fee records."
+  defillama_intents_revenue:
     enabled: true
     optional: true
-    url: "https://api.llama.fi/summary/fees/near-protocol?dataType=dailyRevenue"
+    url: "https://api.llama.fi/summary/fees/near-intents?dataType=dailyRevenue"
     format: json
     lineage_class: "independent_provider_context"
-    notes: "DefiLlama NEAR parent-protocol daily revenue. Broader than NEAR Intents alone; not equivalent to NEAR token-holder value capture."
+    notes: "DefiLlama NEAR Intents net captured revenue, based on NEAR revenue-wallet sweeps; distinct from gross fees."
+  defillama_intents_protocol_revenue:
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/fees/near-intents?dataType=dailyProtocolRevenue"
+    format: json
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama NEAR Intents protocol revenue retained in treasury before the buyback program; expected to be zero after buybacks began."
+  defillama_intents_holders_revenue:
+    enabled: true
+    optional: true
+    url: "https://api.llama.fi/summary/fees/near-intents?dataType=dailyHoldersRevenue"
+    format: json
+    lineage_class: "independent_provider_context"
+    notes: "DefiLlama NEAR Intents holder revenue represented by NEAR buybacks since 2026-02-23; buybacks are not burns."
   nearblocks_intents_dashboard:
     enabled: false
     url: "TODO_FIND_DOCUMENTED_NEARBLOCKS_INTENTS_API"
@@ -61,7 +75,7 @@ metrics:
     sources: [intents_explorer]
     unit: USD
     tolerance_pct: 10
-    definition: "Daily USD notional volume attributed specifically to NEAR Intents; public swaps only until confidential coverage is separately sourced."
+    definition: "Daily USD notional volume from public 1Click Explorer records, with DefiLlama NEAR Intents DEX volume surfaced separately as a scope-mismatch diagnostic."
   daily_transactions:
     sources: [nearblocks_intents_dashboard, intents_explorer]
     unit: transactions
