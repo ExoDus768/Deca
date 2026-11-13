@@ -28,6 +28,8 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-24.04
+    env:
+      DECA_EXPLORER_MAX_PAGES: ${{ github.event.inputs.max_pages || '100' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
