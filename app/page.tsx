@@ -30,26 +30,12 @@ export default function Home() {
   return <main>
     <nav className="nav wrap">
       <a className="brand" href="#"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a>
-      <div className="nav-links"><a href="#dashboard">Explore data</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Documentation <ArrowUpRight size={14}/></a></div>
+      <div className="nav-links"><a href="#dashboard">Dashboard</a><a href="#methodology">Methodology</a><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Documentation <ArrowUpRight size={14}/></a></div>
       <a className="nav-cta" href="https://github.com/ExoDus768/Deca/actions/workflows/explorer-refresh.yml" target="_blank" rel="noreferrer">Refresh data <ArrowUpRight size={14}/></a>
     </nav>
 
-    <section className="hero wrap">
-      <div className="hero-copy">
-        <div className="eyebrow"><span className="eyebrow-dot"/> INDEPENDENT ECOSYSTEM INTELLIGENCE</div>
-        <h1>See the numbers.<br/><span>Understand the signal.</span></h1>
-        <p>Deca turns fragmented ecosystem data into transparent, comparable evidence. Explore what the numbers say, where they come from, and what they leave out.</p>
-        <div className="hero-actions"><a className="primary" href="#dashboard">Explore the dashboard <ArrowUpRight size={16}/></a><a className="text-link" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">How Deca works <ArrowUpRight size={15}/></a></div>
-      </div>
-      <div className="hero-art" aria-label="Abstract data visualization">
-        <div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-core"><span>DECA</span><strong>01</strong></div>
-        <div className="art-chip chip-top"><i/> Evidence verified</div><div className="art-chip chip-bottom"><BarChart3 size={15}/> Data, with context</div>
-        <div className="art-spark spark-one"/><div className="art-spark spark-two"/>
-      </div>
-    </section>
-
     <section className="dashboard wrap" id="dashboard">
-      <div className="section-head"><div><div className="eyebrow">THE DATA ROOM <span className="eyebrow-index">/ 01</span></div><h2>NEAR Intents, in focus.</h2><p>A transparent view of public 1Click Explorer activity.</p></div><span className={ready ? "status good" : "status pending"}><i/>{ready ? "Snapshot available" : "Waiting for snapshot"}</span></div>
+      <div className="section-head"><div><div className="eyebrow">DASHBOARD <span className="eyebrow-index">/ OVERVIEW</span></div><h2>NEAR Intents overview</h2><p>A transparent view of public 1Click Explorer activity.</p></div><span className={ready ? "status good" : "status pending"}><i/>{ready ? "Snapshot available" : "Waiting for snapshot"}</span></div>
       <div className="stats">
         <article className="stat stat-primary"><div className="stat-label">Observed successful volume <BarChart3 size={17}/></div><strong>{ready ? compact(volumeTotal, true) : "—"}</strong><small>USD · Explorer amountInUsd</small><span className="stat-index">01</span></article>
         <article className="stat"><div className="stat-label">Successful transactions <Activity size={17}/></div><strong>{ready ? compact(txTotal) : "—"}</strong><small>SUCCESS status only</small><span className="stat-index">02</span></article>
@@ -71,7 +57,6 @@ export default function Home() {
         <article><div className="method-top"><span>03</span><FileCheck2 size={19}/></div><h3>Reconcile</h3><p>Compare only metrics with matching definitions and overlapping dates. Report gaps, missing sources and limitations.</p><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Review the evidence <ArrowUpRight size={14}/></a></article>
       </div>
     </section>
-    <section className="closing wrap"><div><span className="eyebrow">OPEN BY DESIGN</span><h2>Trust what you can verify.</h2><p>Deca is built in public. Inspect the source, challenge the definitions, and follow the evidence.</p></div><a className="primary" href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Explore Deca on GitHub <ArrowUpRight size={16}/></a></section>
     <footer className="footer wrap"><a className="brand" href="#"><span className="brand-mark">d</span><span>deca<span className="brand-dot">.</span></span></a><span>Independent ecosystem intelligence.</span><a href="https://github.com/ExoDus768/Deca" target="_blank" rel="noreferrer">Open source <ArrowUpRight size={14}/></a></footer>
   </main>;
 }
