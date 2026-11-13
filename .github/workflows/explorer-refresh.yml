@@ -2,6 +2,12 @@ name: Explorer API refresh
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 0 * * *"
+
+concurrency:
+  group: deca-explorer-refresh
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -24,6 +30,8 @@ jobs:
         run: python src/normalize_explorer.py
       - name: Publish reconciliation output
         run: make publish
+      - name: Verify evidence and published output
+        run: make verify
       - name: Commit latest public metrics
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
