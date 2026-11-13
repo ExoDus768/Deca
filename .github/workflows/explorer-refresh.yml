@@ -2,6 +2,13 @@ name: Explorer API refresh
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/explorer-refresh.yml'
+      - 'src/**'
+      - 'sources.yaml'
+      - 'Makefile'
   schedule:
     - cron: "17 0 * * *"
 
