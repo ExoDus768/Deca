@@ -6,10 +6,10 @@ import SiteNav from "../components/site-nav";
 import AnalyticsClient from "./analytics-client";
 export const dynamic = "force-dynamic";
 export default function AnalyticsPage(){
- const v=volumeDoc;
- const t=txDoc;
- const q=qualityDoc;
- const h=hourlyDoc;
+ const v:any=volumeDoc;
+ const t:any=txDoc;
+ const q:any=qualityDoc;
+ const h:any=hourlyDoc;
  const volume=v?.series?.intents_explorer??{};
  const tx=t?.series?.intents_explorer??{};
  const quality=q?.series?.intents_explorer??{};
