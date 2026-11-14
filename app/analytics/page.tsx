@@ -1,14 +1,15 @@
-import fs from "node:fs";
-import path from "node:path";
+import volumeDoc from "../../data/metrics/intents_daily_volume_usd.json";
+import txDoc from "../../data/metrics/daily_transactions.json";
+import qualityDoc from "../../data/metrics/daily_quality.json";
+import hourlyDoc from "../../data/metrics/hourly_activity.json";
 import SiteNav from "../components/site-nav";
 import AnalyticsClient from "./analytics-client";
 export const dynamic = "force-dynamic";
-function read(file:string){try{return JSON.parse(fs.readFileSync(path.join(process.cwd(),file),"utf8"));}catch{return null;}}
 export default function AnalyticsPage(){
- const v=read("data/metrics/intents_daily_volume_usd.json");
- const t=read("data/metrics/daily_transactions.json");
- const q=read("data/metrics/daily_quality.json");
- const h=read("data/metrics/hourly_activity.json");
+ const v=volumeDoc;
+ const t=txDoc;
+ const q=qualityDoc;
+ const h=hourlyDoc;
  const volume=v?.series?.intents_explorer??{};
  const tx=t?.series?.intents_explorer??{};
  const quality=q?.series?.intents_explorer??{};
