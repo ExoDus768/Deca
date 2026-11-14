@@ -9,13 +9,12 @@ const compact=(n:number)=>new Intl.NumberFormat("en",{notation:"compact",maximum
 const dateLabel=(s:string)=>{const d=new Date(s.includes("T")?s:s+"T00:00:00Z");return d.toLocaleDateString("en",{month:"short",day:"numeric",timeZone:"UTC"})+(s.includes("T")?", "+d.toLocaleTimeString("en",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"UTC"}):"");};
 function csv(rows:Row[]){const header="date,volume_usd,successful_transactions,unique_records,success_rate_pct,average_swap_usd";const body=rows.map(r=>[r.date,r.volume,r.transactions,r.records,r.successRate??"",r.transactions?r.volume/r.transactions:0].join(","));return [header,...body].join("\n");}
 export default function AnalyticsClient({rows,hourlyRows,metadata}:{rows:Row[];hourlyRows:Row[];metadata:Record<string,any>}){
- const [preset,setPreset]=useState("30");
- const [start,setStart]=useState(rows[0]?.date??"");
+ const [preset,setPreset]=useState("5");
+ const [start,setStart]=useState(rows.slice(-5)[0]?.date??rows[0]?.date??"");
  const [end,setEnd]=useState(rows.at(-1)?.date??"");
  const [metric,setMetric]=useState("volume");
  const [view,setView]=useState("daily");
- const [showCompare,setShowCompare]=useState(true);
- const [threshold,setThreshold]=useState("all");
+  const [threshold,setThreshold]=useState("all");
  const [sort,setSort]=useState<"desc"|"asc">("desc");
  const filtered=useMemo(()=>{
   const daily=preset!=="custom"&&rows.length?(preset==="all"?rows:rows.slice(-Number(preset))):rows.filter(r=>r.date>=start&&r.date<=end);
@@ -32,13 +31,12 @@ export default function AnalyticsClient({rows,hourlyRows,metadata}:{rows:Row[];h
  const values=filtered.map(r=>metric==="volume"?r.volume:metric==="transactions"?r.transactions:metric==="success_rate"?(r.successRate??0):r.transactions?r.volume/r.transactions:0);
  const total=metric==="success_rate"?(filtered.reduce((a,r)=>a+r.transactions,0)/Math.max(1,filtered.reduce((a,r)=>a+r.records,0)))*100:metric==="average"?(filtered.length?values.reduce((a,b)=>a+b,0)/values.length:0):values.reduce((a,b)=>a+b,0);
  const avg=values.length?(metric==="success_rate"||metric==="average"?total:total/values.length):0;
- const max=Math.max(1,...values);
+ const max=values.length?Math.max(...values):0;
  const min=values.length?Math.min(...values):0;
- const comparisonRows=view==="hourly"?hourlyRows:rows;
- const previousCount=view==="hourly"?filtered.length:view==="daily"?filtered.length:view==="weekly"?filtered.length*7:filtered.length*30;
- const previous=showCompare&&filtered.length?comparisonRows.filter(r=>r.date<filtered[0].date).slice(-previousCount):[];
- const previousTotal=metric==="success_rate"?(previous.reduce((s,r)=>s+r.transactions,0)/Math.max(1,previous.reduce((s,r)=>s+r.records,0)))*100:metric==="average"?(previous.length?previous.reduce((s,r)=>s+(r.transactions?r.volume/r.transactions:0),0)/previous.length:0):previous.reduce((s,r)=>s+(metric==="volume"?r.volume:r.transactions),0);
- const delta=previousTotal?((total-previousTotal)/previousTotal)*100:null;
+ const volumeTotal=filtered.reduce((sum,r)=>sum+r.volume,0);
+ const volumeAverage=filtered.length?volumeTotal/filtered.length:0;
+ const maxVolumeRow=filtered.length?[...filtered].sort((a,b)=>b.volume-a.volume)[0]:null;
+ const minVolumeRow=filtered.length?[...filtered].sort((a,b)=>a.volume-b.volume)[0]:null;
  const sorted=[...filtered].sort((a,b)=>sort==="desc"?b.volume-a.volume:a.volume-b.volume);
  const csvRows=filtered;
  function download(){const blob=new Blob([csv(csvRows)],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="deca-analytics.csv";a.click();URL.revokeObjectURL(url);}
@@ -46,11 +44,10 @@ export default function AnalyticsClient({rows,hourlyRows,metadata}:{rows:Row[];h
  return <section className="analytics-page wrap">
   <div className="page-intro"><div><div className="eyebrow"><i className="eyebrow-dot"/> ANALYTICS WORKSPACE <span className="eyebrow-index">/ 01</span></div><h1>Explore the data.</h1><p>Control the observation window, choose indicators and inspect the underlying daily measurements.</p></div><button className="export-button" onClick={download}><Download size={15}/> Export CSV</button></div>
   <div className="filter-panel"><div className="filter-title"><span><SlidersHorizontal size={16}/> ANALYSIS CONTROLS</span><span className="filter-note">All dates and times are UTC</span></div>
-   <div className="preset-row">{[["7","7D"],["30","30D"],["90","90D"],["all","All data"],["custom","Custom"]].map(([v,l])=><button key={v} className={preset===v?"preset active":"preset"} onClick={()=>{setPreset(v);if(v==="custom"){setStart(rows[0]?.date??"");setEnd(rows.at(-1)?.date??"");}}}>{l}</button>)}</div>
+   <div className="preset-row">{[["5","5D"],["7","7D"],["30","30D"],["90","90D"],["all","All data"],["custom","Custom"]].map(([v,l])=><button key={v} className={preset===v?"preset active":"preset"} onClick={()=>{setPreset(v);if(v==="custom"){setStart(rows[0]?.date??"");setEnd(rows.at(-1)?.date??"");}}}>{l}</button>)}</div>
    <div className="filter-grid"><label><span>Start date</span><input type="date" value={start} max={end||undefined} onChange={e=>{setStart(e.target.value);setPreset("custom");}}/></label><label><span>End date</span><input type="date" value={end} min={start||undefined} onChange={e=>{setEnd(e.target.value);setPreset("custom");}}/></label><label><span>Metric / parameter</span><select value={metric} onChange={e=>setMetric(e.target.value)}><option value="volume">Observed volume (USD)</option><option value="transactions">Successful transactions</option><option value="average">Average swap size (USD)</option><option value="success_rate">Success rate (%)</option></select></label><label><span>Time aggregation</span><select value={view} onChange={e=>setView(e.target.value)}><option value="hourly">Hourly</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></label><label><span>Volume filter</span><select value={threshold} onChange={e=>setThreshold(e.target.value)}><option value="all">All days</option><option value="high">High volume (≥ $1M)</option><option value="low">Below $1M</option></select></label></div>
-   <label className="compare-toggle"><input type="checkbox" checked={showCompare} onChange={e=>setShowCompare(e.target.checked)}/> Compare with previous equivalent period</label>
   </div>
-  <div className="analytics-kpis"><article><span>{metricLabel} · {metric==="success_rate"||metric==="average"?"AVERAGE":"TOTAL"}</span><strong>{metric==="volume"||metric==="average"?money(total):metric==="success_rate"?total.toFixed(2)+"%":compact(total)+" swaps"}</strong><small>{filtered.length} {view==="hourly"?"hours":view==="daily"?"days":view==="weekly"?"weeks":"months"} in selected sample</small></article><article><span>DAILY / PERIOD AVERAGE</span><strong>{metric==="volume"?money(avg):metric==="success_rate"?avg.toFixed(2)+"%":compact(avg)}</strong><small>Average per displayed interval</small></article><article><span>MAXIMUM</span><strong>{metric==="volume"?money(max):metric==="success_rate"?max.toFixed(2)+"%":compact(max)}</strong><small>Minimum: {metric==="volume"?money(min):metric==="success_rate"?min.toFixed(2)+"%":compact(min)}</small></article><article><span>PREVIOUS PERIOD</span><strong className={delta===null?"":delta>=0?"positive":"negative"}>{delta===null?"—":(delta>0?"+":"")+delta.toFixed(1)+"%"}</strong><small>{showCompare?"Compared with previous equivalent window":"Comparison disabled"}</small></article></div>
+  <div className="analytics-kpis"><article><span>TOTAL VOLUME · SELECTED SAMPLE</span><strong>{money(volumeTotal)}</strong><small>{filtered.length} {view==="hourly"?"hours":view==="daily"?"days":view==="weekly"?"weeks":"months"} in selected sample</small></article><article><span>DAILY / PERIOD AVERAGE VOLUME</span><strong>{money(volumeAverage)}</strong><small>Average volume per displayed interval</small></article><article><span>MAXIMUM VOLUME DAY</span><strong>{maxVolumeRow?money(maxVolumeRow.volume):"—"}</strong><small>{maxVolumeRow?dateLabel(maxVolumeRow.date):"No data"}</small></article><article><span>MINIMUM VOLUME DAY</span><strong>{minVolumeRow?money(minVolumeRow.volume):"—"}</strong><small>{minVolumeRow?dateLabel(minVolumeRow.date):"No data"}</small></article></div>
   <section className="analytics-chart"><div className="panel-heading"><div><span className="mini-label">TIME SERIES</span><h2>{metricLabel}</h2><p>{filtered[0]?dateLabel(filtered[0].date):"No matching dates"}{filtered.length>1?" — "+dateLabel(filtered.at(-1)!.date):""}</p></div><span className="quiet-pill">{view.toUpperCase()}</span></div>
    {filtered.length?<div className="analytics-bars">{filtered.map((r,i)=>{const v=values[i];return <div className="analytics-bar-col" key={r.date} title={r.date+": "+(metric==="volume"?money(v):compact(v))}><span>{compact(v)}</span><i style={{height:Math.max(3,v/max*180)+"px"}}/><small>{dateLabel(r.date)}</small></div>})}</div>:<div className="analytics-empty">No records match these filters. Expand the date range.</div>}
    <div className="chart-foot"><span><i/> {metricLabel}</span><span>Source: public 1Click Explorer · UTC</span></div>
