@@ -6,7 +6,7 @@ import { ArrowDown, ArrowUp, ArrowUpRight, CalendarDays, Download, Info, Sliders
 type Row={date:string;volume:number;transactions:number;records:number;successRate:number|null};
 const money=(n:number)=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n);
 const compact=(n:number)=>new Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:2}).format(n);
-const dateLabel=(s:string)=>{const d=new Date(s.includes("T")?s:s+"T00:00:00Z");return d.toLocaleDateString("en",{month:"short",day:"numeric",timeZone:"UTC"})+(s.includes("T")?", "+d.toLocaleTimeString("en",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"UTC"}):"");};
+const dateLabel=(s:string)=>{const [date,time]=s.split("T");const [year,month,day]=date.split("-").map(Number);const label=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][month-1]+" "+day;return label+(time?", "+time.slice(0,5):"");};
 function csv(rows:Row[]){const header="date,volume_usd,successful_transactions,unique_records,success_rate_pct,average_swap_usd";const body=rows.map(r=>[r.date,r.volume,r.transactions,r.records,r.successRate??"",r.transactions?r.volume/r.transactions:0].join(","));return [header,...body].join("\n");}
 export default function AnalyticsClient({rows,hourlyRows,metadata}:{rows:Row[];hourlyRows:Row[];metadata:Record<string,any>}){
  const [preset,setPreset]=useState("5");
