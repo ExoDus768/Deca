@@ -5,9 +5,9 @@
     "comparison_note": "Context only: DefiLlama's DEX volume scope is broader and is not assumed to match public 1Click Explorer rows. Do not calculate a reconciliation gap from these series.",
     "date_timezone": "UTC",
     "definition": "Daily DEX volume from DefiLlama's NEAR Intents protocol summary totalDataChart.",
-    "generated_at_utc": "2026-11-16T06:40:38.414710+00:00",
+    "generated_at_utc": "2026-11-17T08:08:34.916669+00:00",
     "methodology_url": "https://docs.llama.fi/analysts/data-definitions",
-    "snapshot_file": "2026-11-16.json",
+    "snapshot_file": "2026-11-17.json",
     "source": "defillama_intents",
     "source_scope": "DefiLlama-reported NEAR Intents DEX spot-swap volume",
     "status": "available",
@@ -720,7 +720,8 @@
       "2026-11-12": 176440686.0,
       "2026-11-13": 168740766.0,
       "2026-11-14": 153179701.0,
-      "2026-11-15": 145358103.0
+      "2026-11-15": 145358103.0,
+      "2026-11-16": 122427474.0
     }
   }
 }
