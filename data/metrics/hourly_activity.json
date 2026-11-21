@@ -6,123 +6,123 @@
     "date_timezone": "UTC",
     "definition": "Unique Explorer records bucketed by UTC hour; SUCCESS counts and amountInUsd are aggregated at hour resolution. Earlier hour buckets are retained across snapshots.",
     "duplicates_removed": 0,
-    "excluded_non_success_rows": 1758,
-    "generated_at_utc": "2026-11-20T07:29:28.531181+00:00",
+    "excluded_non_success_rows": 1815,
+    "generated_at_utc": "2026-11-21T07:19:45.573473+00:00",
     "latest_snapshot_pages": 100,
-    "newest_transaction_timestamp": 1795158625,
-    "oldest_transaction_timestamp": 1794786522,
+    "newest_transaction_timestamp": 1795244504,
+    "oldest_transaction_timestamp": 1794912686,
     "page_cap_reached": true,
     "raw_rows": 100000,
-    "series_days_retained": 16,
+    "series_days_retained": 17,
     "series_merge_policy": "per-UTC-day maximum observed across committed snapshots; prevents a shallower refresh from erasing a deeper backfill",
     "skipped_missing_usd_rows": 0,
     "snapshot_files": [
-      "2026-11-20T07-11-16Z-page-0001.json",
-      "2026-11-20T07-11-16Z-page-0002.json",
-      "2026-11-20T07-11-16Z-page-0003.json",
-      "2026-11-20T07-11-16Z-page-0004.json",
-      "2026-11-20T07-11-16Z-page-0005.json",
-      "2026-11-20T07-11-16Z-page-0006.json",
-      "2026-11-20T07-11-16Z-page-0007.json",
-      "2026-11-20T07-11-16Z-page-0008.json",
-      "2026-11-20T07-11-16Z-page-0009.json",
-      "2026-11-20T07-11-16Z-page-0010.json",
-      "2026-11-20T07-11-16Z-page-0011.json",
-      "2026-11-20T07-11-16Z-page-0012.json",
-      "2026-11-20T07-11-16Z-page-0013.json",
-      "2026-11-20T07-11-16Z-page-0014.json",
-      "2026-11-20T07-11-16Z-page-0015.json",
-      "2026-11-20T07-11-16Z-page-0016.json",
-      "2026-11-20T07-11-16Z-page-0017.json",
-      "2026-11-20T07-11-16Z-page-0018.json",
-      "2026-11-20T07-11-16Z-page-0019.json",
-      "2026-11-20T07-11-16Z-page-0020.json",
-      "2026-11-20T07-11-16Z-page-0021.json",
-      "2026-11-20T07-11-16Z-page-0022.json",
-      "2026-11-20T07-11-16Z-page-0023.json",
-      "2026-11-20T07-11-16Z-page-0024.json",
-      "2026-11-20T07-11-16Z-page-0025.json",
-      "2026-11-20T07-11-16Z-page-0026.json",
-      "2026-11-20T07-11-16Z-page-0027.json",
-      "2026-11-20T07-11-16Z-page-0028.json",
-      "2026-11-20T07-11-16Z-page-0029.json",
-      "2026-11-20T07-11-16Z-page-0030.json",
-      "2026-11-20T07-11-16Z-page-0031.json",
-      "2026-11-20T07-11-16Z-page-0032.json",
-      "2026-11-20T07-11-16Z-page-0033.json",
-      "2026-11-20T07-11-16Z-page-0034.json",
-      "2026-11-20T07-11-16Z-page-0035.json",
-      "2026-11-20T07-11-16Z-page-0036.json",
-      "2026-11-20T07-11-16Z-page-0037.json",
-      "2026-11-20T07-11-16Z-page-0038.json",
-      "2026-11-20T07-11-16Z-page-0039.json",
-      "2026-11-20T07-11-16Z-page-0040.json",
-      "2026-11-20T07-11-16Z-page-0041.json",
-      "2026-11-20T07-11-16Z-page-0042.json",
-      "2026-11-20T07-11-16Z-page-0043.json",
-      "2026-11-20T07-11-16Z-page-0044.json",
-      "2026-11-20T07-11-16Z-page-0045.json",
-      "2026-11-20T07-11-16Z-page-0046.json",
-      "2026-11-20T07-11-16Z-page-0047.json",
-      "2026-11-20T07-11-16Z-page-0048.json",
-      "2026-11-20T07-11-16Z-page-0049.json",
-      "2026-11-20T07-11-16Z-page-0050.json",
-      "2026-11-20T07-11-16Z-page-0051.json",
-      "2026-11-20T07-11-16Z-page-0052.json",
-      "2026-11-20T07-11-16Z-page-0053.json",
-      "2026-11-20T07-11-16Z-page-0054.json",
-      "2026-11-20T07-11-16Z-page-0055.json",
-      "2026-11-20T07-11-16Z-page-0056.json",
-      "2026-11-20T07-11-16Z-page-0057.json",
-      "2026-11-20T07-11-16Z-page-0058.json",
-      "2026-11-20T07-11-16Z-page-0059.json",
-      "2026-11-20T07-11-16Z-page-0060.json",
-      "2026-11-20T07-11-16Z-page-0061.json",
-      "2026-11-20T07-11-16Z-page-0062.json",
-      "2026-11-20T07-11-16Z-page-0063.json",
-      "2026-11-20T07-11-16Z-page-0064.json",
-      "2026-11-20T07-11-16Z-page-0065.json",
-      "2026-11-20T07-11-16Z-page-0066.json",
-      "2026-11-20T07-11-16Z-page-0067.json",
-      "2026-11-20T07-11-16Z-page-0068.json",
-      "2026-11-20T07-11-16Z-page-0069.json",
-      "2026-11-20T07-11-16Z-page-0070.json",
-      "2026-11-20T07-11-16Z-page-0071.json",
-      "2026-11-20T07-11-16Z-page-0072.json",
-      "2026-11-20T07-11-16Z-page-0073.json",
-      "2026-11-20T07-11-16Z-page-0074.json",
-      "2026-11-20T07-11-16Z-page-0075.json",
-      "2026-11-20T07-11-16Z-page-0076.json",
-      "2026-11-20T07-11-16Z-page-0077.json",
-      "2026-11-20T07-11-16Z-page-0078.json",
-      "2026-11-20T07-11-16Z-page-0079.json",
-      "2026-11-20T07-11-16Z-page-0080.json",
-      "2026-11-20T07-11-16Z-page-0081.json",
-      "2026-11-20T07-11-16Z-page-0082.json",
-      "2026-11-20T07-11-16Z-page-0083.json",
-      "2026-11-20T07-11-16Z-page-0084.json",
-      "2026-11-20T07-11-16Z-page-0085.json",
-      "2026-11-20T07-11-16Z-page-0086.json",
-      "2026-11-20T07-11-16Z-page-0087.json",
-      "2026-11-20T07-11-16Z-page-0088.json",
-      "2026-11-20T07-11-16Z-page-0089.json",
-      "2026-11-20T07-11-16Z-page-0090.json",
-      "2026-11-20T07-11-16Z-page-0091.json",
-      "2026-11-20T07-11-16Z-page-0092.json",
-      "2026-11-20T07-11-16Z-page-0093.json",
-      "2026-11-20T07-11-16Z-page-0094.json",
-      "2026-11-20T07-11-16Z-page-0095.json",
-      "2026-11-20T07-11-16Z-page-0096.json",
-      "2026-11-20T07-11-16Z-page-0097.json",
-      "2026-11-20T07-11-16Z-page-0098.json",
-      "2026-11-20T07-11-16Z-page-0099.json",
-      "2026-11-20T07-11-16Z-page-0100.json"
+      "2026-11-21T07-02-42Z-page-0001.json",
+      "2026-11-21T07-02-42Z-page-0002.json",
+      "2026-11-21T07-02-42Z-page-0003.json",
+      "2026-11-21T07-02-42Z-page-0004.json",
+      "2026-11-21T07-02-42Z-page-0005.json",
+      "2026-11-21T07-02-42Z-page-0006.json",
+      "2026-11-21T07-02-42Z-page-0007.json",
+      "2026-11-21T07-02-42Z-page-0008.json",
+      "2026-11-21T07-02-42Z-page-0009.json",
+      "2026-11-21T07-02-42Z-page-0010.json",
+      "2026-11-21T07-02-42Z-page-0011.json",
+      "2026-11-21T07-02-42Z-page-0012.json",
+      "2026-11-21T07-02-42Z-page-0013.json",
+      "2026-11-21T07-02-42Z-page-0014.json",
+      "2026-11-21T07-02-42Z-page-0015.json",
+      "2026-11-21T07-02-42Z-page-0016.json",
+      "2026-11-21T07-02-42Z-page-0017.json",
+      "2026-11-21T07-02-42Z-page-0018.json",
+      "2026-11-21T07-02-42Z-page-0019.json",
+      "2026-11-21T07-02-42Z-page-0020.json",
+      "2026-11-21T07-02-42Z-page-0021.json",
+      "2026-11-21T07-02-42Z-page-0022.json",
+      "2026-11-21T07-02-42Z-page-0023.json",
+      "2026-11-21T07-02-42Z-page-0024.json",
+      "2026-11-21T07-02-42Z-page-0025.json",
+      "2026-11-21T07-02-42Z-page-0026.json",
+      "2026-11-21T07-02-42Z-page-0027.json",
+      "2026-11-21T07-02-42Z-page-0028.json",
+      "2026-11-21T07-02-42Z-page-0029.json",
+      "2026-11-21T07-02-42Z-page-0030.json",
+      "2026-11-21T07-02-42Z-page-0031.json",
+      "2026-11-21T07-02-42Z-page-0032.json",
+      "2026-11-21T07-02-42Z-page-0033.json",
+      "2026-11-21T07-02-42Z-page-0034.json",
+      "2026-11-21T07-02-42Z-page-0035.json",
+      "2026-11-21T07-02-42Z-page-0036.json",
+      "2026-11-21T07-02-42Z-page-0037.json",
+      "2026-11-21T07-02-42Z-page-0038.json",
+      "2026-11-21T07-02-42Z-page-0039.json",
+      "2026-11-21T07-02-42Z-page-0040.json",
+      "2026-11-21T07-02-42Z-page-0041.json",
+      "2026-11-21T07-02-42Z-page-0042.json",
+      "2026-11-21T07-02-42Z-page-0043.json",
+      "2026-11-21T07-02-42Z-page-0044.json",
+      "2026-11-21T07-02-42Z-page-0045.json",
+      "2026-11-21T07-02-42Z-page-0046.json",
+      "2026-11-21T07-02-42Z-page-0047.json",
+      "2026-11-21T07-02-42Z-page-0048.json",
+      "2026-11-21T07-02-42Z-page-0049.json",
+      "2026-11-21T07-02-42Z-page-0050.json",
+      "2026-11-21T07-02-42Z-page-0051.json",
+      "2026-11-21T07-02-42Z-page-0052.json",
+      "2026-11-21T07-02-42Z-page-0053.json",
+      "2026-11-21T07-02-42Z-page-0054.json",
+      "2026-11-21T07-02-42Z-page-0055.json",
+      "2026-11-21T07-02-42Z-page-0056.json",
+      "2026-11-21T07-02-42Z-page-0057.json",
+      "2026-11-21T07-02-42Z-page-0058.json",
+      "2026-11-21T07-02-42Z-page-0059.json",
+      "2026-11-21T07-02-42Z-page-0060.json",
+      "2026-11-21T07-02-42Z-page-0061.json",
+      "2026-11-21T07-02-42Z-page-0062.json",
+      "2026-11-21T07-02-42Z-page-0063.json",
+      "2026-11-21T07-02-42Z-page-0064.json",
+      "2026-11-21T07-02-42Z-page-0065.json",
+      "2026-11-21T07-02-42Z-page-0066.json",
+      "2026-11-21T07-02-42Z-page-0067.json",
+      "2026-11-21T07-02-42Z-page-0068.json",
+      "2026-11-21T07-02-42Z-page-0069.json",
+      "2026-11-21T07-02-42Z-page-0070.json",
+      "2026-11-21T07-02-42Z-page-0071.json",
+      "2026-11-21T07-02-42Z-page-0072.json",
+      "2026-11-21T07-02-42Z-page-0073.json",
+      "2026-11-21T07-02-42Z-page-0074.json",
+      "2026-11-21T07-02-42Z-page-0075.json",
+      "2026-11-21T07-02-42Z-page-0076.json",
+      "2026-11-21T07-02-42Z-page-0077.json",
+      "2026-11-21T07-02-42Z-page-0078.json",
+      "2026-11-21T07-02-42Z-page-0079.json",
+      "2026-11-21T07-02-42Z-page-0080.json",
+      "2026-11-21T07-02-42Z-page-0081.json",
+      "2026-11-21T07-02-42Z-page-0082.json",
+      "2026-11-21T07-02-42Z-page-0083.json",
+      "2026-11-21T07-02-42Z-page-0084.json",
+      "2026-11-21T07-02-42Z-page-0085.json",
+      "2026-11-21T07-02-42Z-page-0086.json",
+      "2026-11-21T07-02-42Z-page-0087.json",
+      "2026-11-21T07-02-42Z-page-0088.json",
+      "2026-11-21T07-02-42Z-page-0089.json",
+      "2026-11-21T07-02-42Z-page-0090.json",
+      "2026-11-21T07-02-42Z-page-0091.json",
+      "2026-11-21T07-02-42Z-page-0092.json",
+      "2026-11-21T07-02-42Z-page-0093.json",
+      "2026-11-21T07-02-42Z-page-0094.json",
+      "2026-11-21T07-02-42Z-page-0095.json",
+      "2026-11-21T07-02-42Z-page-0096.json",
+      "2026-11-21T07-02-42Z-page-0097.json",
+      "2026-11-21T07-02-42Z-page-0098.json",
+      "2026-11-21T07-02-42Z-page-0099.json",
+      "2026-11-21T07-02-42Z-page-0100.json"
     ],
     "snapshot_pages_retained": 100,
     "source": "intents_explorer",
     "source_scope": "public 1Click swap transactions returned by Explorer API",
-    "success_rate_pct": 98.242,
-    "successful_rows": 98242,
+    "success_rate_pct": 98.185,
+    "successful_rows": 98185,
     "unique_rows": 100000,
     "unit": "hourly_activity"
   },
@@ -2349,10 +2349,10 @@
       },
       "2026-11-18T08:00Z": {
         "non_success_records": 15,
-        "success_rate_pct": 98.6226,
-        "successful_transactions": 1074,
-        "unique_records": 1089,
-        "volume_usd": 2292371.462728758
+        "success_rate_pct": 98.6239,
+        "successful_transactions": 1075,
+        "unique_records": 1090,
+        "volume_usd": 2310384.3756149076
       },
       "2026-11-18T09:00Z": {
         "non_success_records": 21,
@@ -2369,11 +2369,11 @@
         "volume_usd": 2130390.2293079016
       },
       "2026-11-18T11:00Z": {
-        "non_success_records": 11,
-        "success_rate_pct": 98.9834,
-        "successful_transactions": 1071,
+        "non_success_records": 10,
+        "success_rate_pct": 99.0758,
+        "successful_transactions": 1072,
         "unique_records": 1082,
-        "volume_usd": 1950056.0857834578
+        "volume_usd": 1950062.512351301
       },
       "2026-11-18T12:00Z": {
         "non_success_records": 11,
@@ -2425,11 +2425,11 @@
         "volume_usd": 2407357.830970572
       },
       "2026-11-18T19:00Z": {
-        "non_success_records": 12,
-        "success_rate_pct": 99.0361,
-        "successful_transactions": 1233,
+        "non_success_records": 11,
+        "success_rate_pct": 99.1165,
+        "successful_transactions": 1234,
         "unique_records": 1245,
-        "volume_usd": 2771592.252428043
+        "volume_usd": 2771754.5123835336
       },
       "2026-11-18T20:00Z": {
         "non_success_records": 16,
@@ -2516,10 +2516,10 @@
         "volume_usd": 941238.6193410176
       },
       "2026-11-19T08:00Z": {
-        "non_success_records": 5,
-        "success_rate_pct": 99.3655,
+        "non_success_records": 6,
+        "success_rate_pct": 99.2395,
         "successful_transactions": 783,
-        "unique_records": 788,
+        "unique_records": 789,
         "volume_usd": 1046059.7922916166
       },
       "2026-11-19T09:00Z": {
@@ -2565,10 +2565,10 @@
         "volume_usd": 2143176.2176015936
       },
       "2026-11-19T15:00Z": {
-        "non_success_records": 13,
-        "success_rate_pct": 99.0767,
+        "non_success_records": 14,
+        "success_rate_pct": 99.0064,
         "successful_transactions": 1395,
-        "unique_records": 1408,
+        "unique_records": 1409,
         "volume_usd": 2145500.1107927584
       },
       "2026-11-19T16:00Z": {
@@ -2580,10 +2580,10 @@
       },
       "2026-11-19T17:00Z": {
         "non_success_records": 21,
-        "success_rate_pct": 98.3333,
-        "successful_transactions": 1239,
-        "unique_records": 1260,
-        "volume_usd": 2747753.6804610584
+        "success_rate_pct": 98.3347,
+        "successful_transactions": 1240,
+        "unique_records": 1261,
+        "volume_usd": 2756745.121461058
       },
       "2026-11-19T18:00Z": {
         "non_success_records": 15,
@@ -2594,31 +2594,31 @@
       },
       "2026-11-19T19:00Z": {
         "non_success_records": 6,
-        "success_rate_pct": 99.6086,
-        "successful_transactions": 1527,
-        "unique_records": 1533,
-        "volume_usd": 2696435.637870087
+        "success_rate_pct": 99.6089,
+        "successful_transactions": 1528,
+        "unique_records": 1534,
+        "volume_usd": 2696452.6465098104
       },
       "2026-11-19T20:00Z": {
-        "non_success_records": 12,
-        "success_rate_pct": 99.026,
-        "successful_transactions": 1220,
+        "non_success_records": 11,
+        "success_rate_pct": 99.1071,
+        "successful_transactions": 1221,
         "unique_records": 1232,
-        "volume_usd": 3114754.144097315
+        "volume_usd": 3114854.100497315
       },
       "2026-11-19T21:00Z": {
-        "non_success_records": 11,
-        "success_rate_pct": 98.989,
-        "successful_transactions": 1077,
+        "non_success_records": 10,
+        "success_rate_pct": 99.0809,
+        "successful_transactions": 1078,
         "unique_records": 1088,
-        "volume_usd": 2724481.2274093903
+        "volume_usd": 2724490.349534122
       },
       "2026-11-19T22:00Z": {
         "non_success_records": 25,
-        "success_rate_pct": 97.6895,
-        "successful_transactions": 1057,
-        "unique_records": 1082,
-        "volume_usd": 1939594.0481300815
+        "success_rate_pct": 97.6916,
+        "successful_transactions": 1058,
+        "unique_records": 1083,
+        "volume_usd": 1939724.173461115
       },
       "2026-11-19T23:00Z": {
         "non_success_records": 6,
@@ -2629,31 +2629,31 @@
       },
       "2026-11-20T00:00Z": {
         "non_success_records": 6,
-        "success_rate_pct": 99.1826,
-        "successful_transactions": 728,
-        "unique_records": 734,
-        "volume_usd": 1124453.543138525
+        "success_rate_pct": 99.1837,
+        "successful_transactions": 729,
+        "unique_records": 735,
+        "volume_usd": 1124487.186808318
       },
       "2026-11-20T01:00Z": {
         "non_success_records": 18,
-        "success_rate_pct": 97.4212,
-        "successful_transactions": 680,
-        "unique_records": 698,
-        "volume_usd": 1209873.060666314
+        "success_rate_pct": 97.4249,
+        "successful_transactions": 681,
+        "unique_records": 699,
+        "volume_usd": 1209896.9812646692
       },
       "2026-11-20T02:00Z": {
         "non_success_records": 12,
-        "success_rate_pct": 98.2301,
-        "successful_transactions": 666,
-        "unique_records": 678,
-        "volume_usd": 1413132.715312987
+        "success_rate_pct": 98.2327,
+        "successful_transactions": 667,
+        "unique_records": 679,
+        "volume_usd": 1413144.715248607
       },
       "2026-11-20T03:00Z": {
         "non_success_records": 9,
-        "success_rate_pct": 98.6364,
-        "successful_transactions": 651,
-        "unique_records": 660,
-        "volume_usd": 1375860.0451562805
+        "success_rate_pct": 98.6384,
+        "successful_transactions": 652,
+        "unique_records": 661,
+        "volume_usd": 1375865.0410112804
       },
       "2026-11-20T04:00Z": {
         "non_success_records": 7,
@@ -2664,24 +2664,192 @@
       },
       "2026-11-20T05:00Z": {
         "non_success_records": 5,
-        "success_rate_pct": 99.3036,
-        "successful_transactions": 713,
-        "unique_records": 718,
-        "volume_usd": 2210494.789281454
+        "success_rate_pct": 99.3046,
+        "successful_transactions": 714,
+        "unique_records": 719,
+        "volume_usd": 2210499.936317509
       },
       "2026-11-20T06:00Z": {
-        "non_success_records": 20,
-        "success_rate_pct": 97.0282,
-        "successful_transactions": 653,
-        "unique_records": 673,
-        "volume_usd": 1009635.0874208864
+        "non_success_records": 6,
+        "success_rate_pct": 99.1489,
+        "successful_transactions": 699,
+        "unique_records": 705,
+        "volume_usd": 1153609.716968533
       },
       "2026-11-20T07:00Z": {
+        "non_success_records": 8,
+        "success_rate_pct": 98.9348,
+        "successful_transactions": 743,
+        "unique_records": 751,
+        "volume_usd": 1266219.502323064
+      },
+      "2026-11-20T08:00Z": {
+        "non_success_records": 8,
+        "success_rate_pct": 99.073,
+        "successful_transactions": 855,
+        "unique_records": 863,
+        "volume_usd": 2316436.006315102
+      },
+      "2026-11-20T09:00Z": {
+        "non_success_records": 13,
+        "success_rate_pct": 98.7631,
+        "successful_transactions": 1038,
+        "unique_records": 1051,
+        "volume_usd": 1895389.588055894
+      },
+      "2026-11-20T10:00Z": {
+        "non_success_records": 21,
+        "success_rate_pct": 97.9981,
+        "successful_transactions": 1028,
+        "unique_records": 1049,
+        "volume_usd": 2428719.522836589
+      },
+      "2026-11-20T11:00Z": {
+        "non_success_records": 10,
+        "success_rate_pct": 99.0706,
+        "successful_transactions": 1066,
+        "unique_records": 1076,
+        "volume_usd": 3581835.532194343
+      },
+      "2026-11-20T12:00Z": {
+        "non_success_records": 23,
+        "success_rate_pct": 98.1732,
+        "successful_transactions": 1236,
+        "unique_records": 1259,
+        "volume_usd": 2150792.5594516136
+      },
+      "2026-11-20T13:00Z": {
+        "non_success_records": 23,
+        "success_rate_pct": 98.4182,
+        "successful_transactions": 1431,
+        "unique_records": 1454,
+        "volume_usd": 3231421.0788689237
+      },
+      "2026-11-20T14:00Z": {
+        "non_success_records": 41,
+        "success_rate_pct": 96.9517,
+        "successful_transactions": 1304,
+        "unique_records": 1345,
+        "volume_usd": 2971568.3233483215
+      },
+      "2026-11-20T15:00Z": {
+        "non_success_records": 68,
+        "success_rate_pct": 97.2108,
+        "successful_transactions": 2370,
+        "unique_records": 2438,
+        "volume_usd": 8676208.389634052
+      },
+      "2026-11-20T16:00Z": {
+        "non_success_records": 45,
+        "success_rate_pct": 98.3636,
+        "successful_transactions": 2705,
+        "unique_records": 2750,
+        "volume_usd": 8795950.757006237
+      },
+      "2026-11-20T17:00Z": {
+        "non_success_records": 42,
+        "success_rate_pct": 97.9827,
+        "successful_transactions": 2040,
+        "unique_records": 2082,
+        "volume_usd": 5373679.295435867
+      },
+      "2026-11-20T18:00Z": {
+        "non_success_records": 36,
+        "success_rate_pct": 97.9877,
+        "successful_transactions": 1753,
+        "unique_records": 1789,
+        "volume_usd": 5582096.726425007
+      },
+      "2026-11-20T19:00Z": {
+        "non_success_records": 34,
+        "success_rate_pct": 98.4882,
+        "successful_transactions": 2215,
+        "unique_records": 2249,
+        "volume_usd": 6444423.223930617
+      },
+      "2026-11-20T20:00Z": {
+        "non_success_records": 26,
+        "success_rate_pct": 98.5083,
+        "successful_transactions": 1717,
+        "unique_records": 1743,
+        "volume_usd": 5012965.686638015
+      },
+      "2026-11-20T21:00Z": {
+        "non_success_records": 40,
+        "success_rate_pct": 97.421,
+        "successful_transactions": 1511,
+        "unique_records": 1551,
+        "volume_usd": 4565164.851510208
+      },
+      "2026-11-20T22:00Z": {
+        "non_success_records": 16,
+        "success_rate_pct": 98.6026,
+        "successful_transactions": 1129,
+        "unique_records": 1145,
+        "volume_usd": 3481367.6256573615
+      },
+      "2026-11-20T23:00Z": {
+        "non_success_records": 10,
+        "success_rate_pct": 98.8386,
+        "successful_transactions": 851,
+        "unique_records": 861,
+        "volume_usd": 2737213.696263732
+      },
+      "2026-11-21T00:00Z": {
+        "non_success_records": 15,
+        "success_rate_pct": 98.1618,
+        "successful_transactions": 801,
+        "unique_records": 816,
+        "volume_usd": 1487587.750748407
+      },
+      "2026-11-21T01:00Z": {
+        "non_success_records": 11,
+        "success_rate_pct": 98.3942,
+        "successful_transactions": 674,
+        "unique_records": 685,
+        "volume_usd": 1643494.294835946
+      },
+      "2026-11-21T02:00Z": {
         "non_success_records": 17,
-        "success_rate_pct": 84.9558,
-        "successful_transactions": 96,
-        "unique_records": 113,
-        "volume_usd": 102161.14306585492
+        "success_rate_pct": 97.4474,
+        "successful_transactions": 649,
+        "unique_records": 666,
+        "volume_usd": 1670306.1952704624
+      },
+      "2026-11-21T03:00Z": {
+        "non_success_records": 30,
+        "success_rate_pct": 96.8187,
+        "successful_transactions": 913,
+        "unique_records": 943,
+        "volume_usd": 2638551.410184705
+      },
+      "2026-11-21T04:00Z": {
+        "non_success_records": 9,
+        "success_rate_pct": 99.2958,
+        "successful_transactions": 1269,
+        "unique_records": 1278,
+        "volume_usd": 7707093.050810019
+      },
+      "2026-11-21T05:00Z": {
+        "non_success_records": 14,
+        "success_rate_pct": 98.6434,
+        "successful_transactions": 1018,
+        "unique_records": 1032,
+        "volume_usd": 4530093.798829396
+      },
+      "2026-11-21T06:00Z": {
+        "non_success_records": 52,
+        "success_rate_pct": 95.6485,
+        "successful_transactions": 1143,
+        "unique_records": 1195,
+        "volume_usd": 3137392.7471030313
+      },
+      "2026-11-21T07:00Z": {
+        "non_success_records": 14,
+        "success_rate_pct": 56.25,
+        "successful_transactions": 18,
+        "unique_records": 32,
+        "volume_usd": 58929.408975540544
       }
     }
   }
