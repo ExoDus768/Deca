@@ -10,17 +10,17 @@
       "This source covers all Intents integrators and therefore does not have identical scope to the public 1Click Explorer sample."
     ],
     "date_timezone": "UTC",
-    "defillama_intents_fees_days": 560,
-    "defillama_intents_fees_snapshot": "2026-11-21.json",
-    "defillama_intents_holders_revenue_days": 560,
-    "defillama_intents_holders_revenue_snapshot": "2026-11-21.json",
-    "defillama_intents_protocol_revenue_days": 560,
-    "defillama_intents_protocol_revenue_snapshot": "2026-11-21.json",
-    "defillama_intents_revenue_days": 560,
-    "defillama_intents_revenue_snapshot": "2026-11-21.json",
-    "defillama_intents_supply_side_revenue_days": 560,
-    "defillama_intents_supply_side_revenue_snapshot": "2026-11-21.json",
-    "generated_at_utc": "2026-11-21T07:19:45.762074+00:00",
+    "defillama_intents_fees_days": 561,
+    "defillama_intents_fees_snapshot": "2026-11-22.json",
+    "defillama_intents_holders_revenue_days": 561,
+    "defillama_intents_holders_revenue_snapshot": "2026-11-22.json",
+    "defillama_intents_protocol_revenue_days": 561,
+    "defillama_intents_protocol_revenue_snapshot": "2026-11-22.json",
+    "defillama_intents_revenue_days": 561,
+    "defillama_intents_revenue_snapshot": "2026-11-22.json",
+    "defillama_intents_supply_side_revenue_days": 561,
+    "defillama_intents_supply_side_revenue_snapshot": "2026-11-22.json",
+    "generated_at_utc": "2026-11-22T07:00:21.048950+00:00",
     "methodology_url": "https://docs.llama.fi/analysts/data-definitions",
     "source": "DefiLlama",
     "source_scope": "NEAR Intents-specific fee adapter; all integrators, not only public 1Click Explorer transactions",
@@ -587,8 +587,9 @@
       "2026-11-16": 270722.0,
       "2026-11-17": 227170.0,
       "2026-11-18": 234039.0,
-      "2026-11-19": 179319.0,
-      "2026-11-20": 17537.0
+      "2026-11-19": 179153.0,
+      "2026-11-20": 545978.0,
+      "2026-11-21": 21319.0
     },
     "defillama_intents_holders_revenue": {
       "2025-05-10": 0.0,
@@ -1149,8 +1150,9 @@
       "2026-11-16": 36896.0,
       "2026-11-17": 39586.0,
       "2026-11-18": 52608.0,
-      "2026-11-19": 34880.0,
-      "2026-11-20": 98965.0
+      "2026-11-19": 37940.0,
+      "2026-11-20": 99894.0,
+      "2026-11-21": 61462.0
     },
     "defillama_intents_protocol_revenue": {
       "2025-05-10": 0.0,
@@ -1712,7 +1714,8 @@
       "2026-11-17": 0.0,
       "2026-11-18": 0.0,
       "2026-11-19": 0.0,
-      "2026-11-20": 0.0
+      "2026-11-20": 0.0,
+      "2026-11-21": 0.0
     },
     "defillama_intents_revenue": {
       "2025-05-10": 0.0,
@@ -2273,8 +2276,9 @@
       "2026-11-16": 36896.0,
       "2026-11-17": 39586.0,
       "2026-11-18": 52608.0,
-      "2026-11-19": 34880.0,
-      "2026-11-20": 98965.0
+      "2026-11-19": 37940.0,
+      "2026-11-20": 99894.0,
+      "2026-11-21": 61462.0
     },
     "defillama_intents_supply_side_revenue": {
       "2025-05-10": 1.0,
@@ -2835,8 +2839,9 @@
       "2026-11-16": 233826.0,
       "2026-11-17": 187584.0,
       "2026-11-18": 181430.0,
-      "2026-11-19": 144438.0,
-      "2026-11-20": -81428.0
+      "2026-11-19": 141213.0,
+      "2026-11-20": 446084.0,
+      "2026-11-21": -40143.0
     }
   }
 }
